@@ -8,8 +8,7 @@ import (
 	"github.com/dgrijalva/jwt-go"
 )
 
-var SECRET = []byte("super-secret-auth-key")
-var API_KEY = "1234"
+var SECRET = []byte(getEnv("SECRET", "super-secret-auth-key"))
 
 func CreateJWT() (string, error) {
 

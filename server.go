@@ -14,9 +14,13 @@ func main() {
 
 	db.Connect()
 	db.DB.AutoMigrate(models.Commentary{})
+	db.DB.AutoMigrate(models.Users{})
+	db.DB.AutoMigrate(models.Permisions{})
 
 	r := mux.NewRouter().StrictSlash(true)
-	r.HandleFunc("/auth/login", routes.Login)
+	r.HandleFunc("/auth/login", routes.Login).Methods("POST")
+	r.HandleFunc("/auth/signup", routes.SignUp).Methods("POST")
+
 	r.HandleFunc("/commentaries", routes.GetCommentaries).Methods("GET")
 	r.HandleFunc("/commentaries/{id}", utils.ValidateJWT(routes.GetCommentary)).Methods("GET")
 	r.HandleFunc("/commentaries", routes.CreateCommentary).Methods("POST")

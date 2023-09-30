@@ -24,3 +24,7 @@ func Ok(w http.ResponseWriter, data interface{}) {
 	w.WriteHeader(http.StatusOK)
 	json.NewEncoder(w).Encode(data)
 }
+func Unauthorized(w http.ResponseWriter, data interface{}) {
+	w.WriteHeader(http.StatusUnauthorized)
+	json.NewEncoder(w).Encode(data)
+}
