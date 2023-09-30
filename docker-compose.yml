@@ -1,0 +1,22 @@
+version: '3.9'
+services:
+  api:
+    build: 
+      context: .
+      dockerfile: dockerfile
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./:/go-server
+  db:
+    environment:
+      - MYSQL_ROOT_PASSWORD=123456
+      - MYSQL_DATABASE=gorm
+      - MYSQL_USER=golang
+      - MYSQL_PASSWORD=golang
+    image: mysql
+    volumes:
+      - db_data:/var/lib/mysql
+volumes:
+  db_data:
+      
