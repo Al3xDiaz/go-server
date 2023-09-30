@@ -13,9 +13,9 @@ import (
 func main() {
 
 	db.Connect()
-	db.DB.AutoMigrate(models.Commentary{})
 	db.DB.AutoMigrate(models.Users{})
 	db.DB.AutoMigrate(models.Permisions{})
+	db.DB.AutoMigrate(models.Commentary{})
 
 	r := mux.NewRouter().StrictSlash(true)
 	r.HandleFunc("/auth/login", routes.Login).Methods("POST")

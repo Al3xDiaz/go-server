@@ -7,7 +7,7 @@ import (
 type Commentary struct {
 	gorm.Model
 
-	ID      uint   `json:"id" gorm:"primaryKey,autoIncrement"`
+	ID      uint   `json:"id" gorm:"primaryKey;autoIncrement"`
 	UserID  uint   `json:"userId"`
 	Comment string `json:"comment"`
 }

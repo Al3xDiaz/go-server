@@ -2,7 +2,6 @@ package routes
 
 import (
 	"encoding/json"
-	"log"
 	"net/http"
 
 	"github.com/al3xdiaz/go-server/db"
@@ -23,18 +22,21 @@ func Login(w http.ResponseWriter, r *http.Request) {
 
 	var user models.Users
 	db.DB.First(&user, login)
-	log.Output(0, user.Password)
 	if user.UserName == "" {
 		utils.Unauthorized(w, nil)
 		return
 	}
+	db.DB.Model(&models.Users{}).Association("Permisions").Find(&user.Permisions)
 
-	token, err := utils.CreateJWT()
+	token, err := utils.CreateJWT(map[string]any{
+		"username":   user.UserName,
+		"permisions": user.Permisions,
+	})
 	if err != nil {
 		utils.InternalServerError(w, "error create token")
 		return
 	}
-	utils.Ok(w, token)
+	utils.Ok(w, map[string]string{"token": token})
 }
 
 func SignUp(w http.ResponseWriter, r *http.Request) {
@@ -46,5 +48,5 @@ func SignUp(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		utils.BadRequest(w, err.Error())
 	}
-	json.NewEncoder(w).Encode(user)
+	utils.Ok(w, user)
 }
