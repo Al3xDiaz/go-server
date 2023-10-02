@@ -28,7 +28,7 @@ func RunServer() {
 
 	r.HandleFunc("/commentaries", routes.GetCommentaries).Methods("GET")
 	r.HandleFunc("/commentaries/{id}", utils.RequirePermision(routes.GetCommentary)).Methods("GET")
-	r.HandleFunc("/commentaries", routes.CreateCommentary).Methods("POST")
+	r.HandleFunc("/commentaries", utils.RequireAuth(routes.CreateCommentary)).Methods("POST")
 	http.Handle("/", r)
 	http.ListenAndServe(":8000", nil)
 }

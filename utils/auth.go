@@ -65,6 +65,7 @@ func RequireAuth(next func(w http.ResponseWriter, r *http.Request)) http.Handler
 		valid, _ := ValidateJWT(w, r)
 		if valid {
 			next(w, r)
+			return
 		}
 		Unauthorized(w, map[string]interface{}{
 			"msg": "invalid token",
@@ -85,8 +86,11 @@ func RequirePermision(next func(w http.ResponseWriter, r *http.Request)) http.Ha
 					break
 				}
 				if reg.FindString(r.URL.Path) != "" {
-					next(w, r)
-					return
+					methodsreg, _ := regexp.Compile(v.Methods)
+					if methodsreg.FindString(r.Method) != "" {
+						next(w, r)
+						return
+					}
 				}
 			}
 			Forbidden(w, map[string]string{"msg": "not authorized: " + r.URL.Path})

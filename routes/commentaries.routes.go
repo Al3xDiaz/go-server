@@ -1,6 +1,7 @@
 package routes
 
 import (
+	"encoding/json"
 	"net/http"
 
 	"github.com/al3xdiaz/go-server/db"
@@ -35,9 +36,16 @@ func GetCommentaries(w http.ResponseWriter, r *http.Request) {
 }
 func CreateCommentary(w http.ResponseWriter, r *http.Request) {
 	// ...
+	_, data := request.ValidateJWT(w, r)
+	username := data["username"]
+
 	var commentary models.Commentary
-	data := db.DB.Create(&commentary)
-	if data.Error != nil {
+	json.NewDecoder(r.Body).Decode(&commentary)
+	var user models.User
+	db.DB.First(&user, "user_name = ?", username)
+	commentary.UserID = user.ID
+	createCommentary := db.DB.Create(&commentary)
+	if createCommentary.Error != nil {
 		request.InternalServerError(w, "Error creating commentary")
 		return
 	}
