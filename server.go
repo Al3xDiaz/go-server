@@ -22,6 +22,11 @@ func RunServer() {
 	db.DB.AutoMigrate(models.Commentary{})
 
 	r := mux.NewRouter().StrictSlash(true)
+
+	fs := http.FileServer(http.Dir("/static"))
+
+	r.PathPrefix("/").Handler(http.StripPrefix("/", fs))
+
 	r.HandleFunc("/auth/login", routes.Login).Methods("POST")
 	r.HandleFunc("/auth/signup", routes.SignUp).Methods("POST")
 	r.HandleFunc("/auth/userdata", utils.RequireAuth(routes.UserData)).Methods("GET")
