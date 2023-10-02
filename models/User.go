@@ -13,7 +13,7 @@ func MakePassword(password string) string {
 	return hex.EncodeToString(sum[:])
 }
 
-type Users struct {
+type User struct {
 	gorm.Model
 
 	ID         uint         `json:"id" gorm:"primaryKey;autoIncrement"`
@@ -23,10 +23,11 @@ type Users struct {
 	FirstName  string       `json:"firstName" gorm:"not null"`
 	LastName   string       `json:"lastName" gorm:"not null"`
 	Verified   bool         `json:"verified" gorm:"default=false"`
-	Permisions []Permisions `json:"permisions" gorm:"foreignKey:UserID"`
+	Permisions []*Permision `gorm:"many2many:UserPermision;association_foreignkey:id;foreignkey:id"`
+	// Permisions []*Permision `gorm:"many2many:user_permision;"`
 }
 
-func (u *Users) BeforeSave(tx *gorm.DB) (err error) {
+func (u *User) BeforeSave(tx *gorm.DB) (err error) {
 	if u.Password != "" {
 		hash := MakePassword(u.Password)
 		tx.Statement.SetColumn("Password", hash)
@@ -36,12 +37,20 @@ func (u *Users) BeforeSave(tx *gorm.DB) (err error) {
 	return
 }
 
-type Permisions struct {
+type Permision struct {
 	gorm.Model
 
 	ID          uint   `json:"id" gorm:"primaryKey;autoIncrement"`
 	Description string `json:"userName" gorm:"type=varchar(150)"`
 	Path        string `json:"path" gorm:"type=varchar(50)"`    // /*, /api/users/*, /api/users/{id}
 	Methods     string `json:"methods" gorm:"type=varchar(50)"` // (*), (get|post), (get|post|put|delete)
-	UserID      uint   `json:"userId" gorm:"foreignKey:UserID"`
+	// Users       []*User `gorm:"many2many:user_permision;"`
+}
+
+func MakeMapString(list []*Permision) []string {
+	var resp = make([]string, 0)
+	for _, v := range list {
+		resp = append(resp, v.Path)
+	}
+	return resp
 }

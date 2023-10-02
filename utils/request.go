@@ -33,3 +33,9 @@ func Unauthorized(w http.ResponseWriter, data interface{}) {
 	w.WriteHeader(http.StatusUnauthorized)
 	json.NewEncoder(w).Encode(data)
 }
+
+func Forbidden(w http.ResponseWriter, data interface{}) {
+	w.Header().Add("Content-Type", "application/json")
+	w.WriteHeader(http.StatusForbidden)
+	json.NewEncoder(w).Encode(data)
+}

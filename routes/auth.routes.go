@@ -20,17 +20,17 @@ func Login(w http.ResponseWriter, r *http.Request) {
 	json.NewDecoder(r.Body).Decode(&login)
 	login.Password = models.MakePassword(login.Password)
 
-	var user models.Users
+	var user models.User
 	db.DB.First(&user, login)
 	if user.UserName == "" {
 		utils.Unauthorized(w, nil)
 		return
 	}
-	db.DB.Model(&models.Users{}).Association("Permisions").Find(&user.Permisions)
+	db.DB.Model(&user).Association("Permisions").Find(&user.Permisions)
 
 	token, err := utils.CreateJWT(map[string]any{
 		"username":   user.UserName,
-		"permisions": user.Permisions,
+		"permisions": models.MakeMapString(user.Permisions),
 	})
 	if err != nil {
 		utils.InternalServerError(w, "error create token")
@@ -40,7 +40,7 @@ func Login(w http.ResponseWriter, r *http.Request) {
 }
 
 func SignUp(w http.ResponseWriter, r *http.Request) {
-	var user models.Users
+	var user models.User
 	json.NewDecoder(r.Body).Decode(&user)
 
 	createdUser := db.DB.Create(&user)
@@ -48,5 +48,13 @@ func SignUp(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		utils.BadRequest(w, err.Error())
 	}
+	utils.Ok(w, user)
+}
+func UserData(w http.ResponseWriter, r *http.Request) {
+	_, data := utils.ValidateJWT(w, r)
+	username := data["username"]
+	var user models.User
+	db.DB.First(&user, "user_name = ?", username)
+	db.DB.Model(&user).Association("Permisions").Find(&user.Permisions)
 	utils.Ok(w, user)
 }
