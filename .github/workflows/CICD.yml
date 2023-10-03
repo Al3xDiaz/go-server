@@ -1,0 +1,113 @@
+name: CI backend
+
+on:
+  push:
+    # Publish `master` as Docker `latest` image.
+    branches:
+      - 'main'
+
+env:
+  REGISTRY: "ghcr.io/${{ github.repository_owner }}"
+  # WEBHOOK_ID: "${{ secrets.WEBHOOK_ID }}"
+  # WEBHOOK_TOKEN: "${{ secrets.WEBHOOK_TOKEN }}"
+  GIT_STRATEGY: fetch
+  GIT_DEPTH: 0
+  IGNORE_NORMALISATION_GIT_HEAD_MOVE: 1
+
+jobs:
+  # Push image to GitHub Packages.
+  # See also https://docs.docker.com/docker-hub/builds/
+  calculate-version:
+    runs-on: ubuntu-latest
+    outputs:
+      MajorMinorPatch: ${{ steps.gitversion.outputs.majorMinorPatch }}
+      FullSemVer: ${{ steps.gitversion.outputs.fullSemVer }}
+    steps:
+      -
+        name: Checkout
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      - name: Install GitVersion
+        uses: gittools/actions/gitversion/setup@v0
+        with:
+          versionSpec: '5.x'
+      - name: Determine Version
+        id:   gitversion # id to later be referenced
+        uses: gittools/actions/gitversion/execute@v0
+      - name: Set Outputs major version
+        id: set-outputs-major
+        run: echo "MajorMinorPatch=${{ steps.gitversion.outputs.majorMinorPatch }}" >> $GITHUB_OUTPUT
+      - name: Set Outputs full version
+        id: set-outputs-full
+        run: echo "FullSemVer=${{ steps.gitversion.outputs.fullSemVer }}" >> $GITHUB_OUTPUT
+
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      packages: write
+      contents: read
+    needs: [calculate-version]
+
+    steps:
+      - uses: actions/checkout@v3
+      
+      - name: Build docker image
+        run: |
+          echo "build image"
+          docker build --file dockerfile.prod --tag ${REGISTRY,,}/backend:latest .
+
+      - name: tag docker images
+        run: |
+          TAG=${{ needs.calculate-version.outputs.MajorMinorPatch }}
+          TAG_LONG=${{ needs.calculate-version.outputs.FullSemVer }}
+          docker tag ${REGISTRY,,}/backend:latest ${REGISTRY,,}/backend:$TAG
+          docker tag ${REGISTRY,,}/backend:latest ${REGISTRY,,}/backend:$TAG_LONG
+
+      - name: Log in to registry # This is where you will update the PAT to GITHUB_TOKEN
+        run: echo "${{ secrets.CICD_TOKEN }}" | docker login ghcr.io -u ${{ github.repository_owner }} --password-stdin
+      - name: Push tag image to registry
+        run: |
+          IMAGE_ID=${REGISTRY,,}/backend
+          docker push $IMAGE_ID:${{ needs.calculate-version.outputs.MajorMinorPatch }}
+          docker push $IMAGE_ID:${{ needs.calculate-version.outputs.FullSemVer }}
+          # if branch is master, push image with `latest` tag
+          if [ "${{ github.ref }}" = "refs/heads/main" ]; then
+            docker push $IMAGE_ID:latest
+          fi
+  deploy:
+      runs-on: ubuntu-latest
+      container:
+        image: registry.gitlab.com/chaoticteams/ansible:latest
+      needs: [calculate-version,build]
+      steps:
+      - uses: actions/checkout@v3
+      - name: get gitlab artifact and create ssh key
+        run: |
+          apk add --update --no-cache curl
+          curl -L --header "PRIVATE-TOKEN: ${{ secrets.GITLAB_TOKEN }}" "https://gitlab.com/api/v4/projects/42073065/jobs/artifacts/main/download?job=config_infrastructure" --output config.zip
+          unzip -o config.zip -d .
+          mkdir ~/.ssh
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/ansible
+          echo "${{ secrets.SSH_PUBLIC_KEY }}" > ~/.ssh/ansible.pub
+          chmod 600 ~/.ssh/ansible || sudo chmod 600 ~/.ssh/ansible || echo "chmod 600 ~/.ssh/ansible failed"
+      - name: deploy app with ansible
+        env:
+          ANSIBLE_INVENTORY: ansible/inventory
+        run: |
+          ansible-playbook ansible/main.yml -e "version=${{ needs.calculate-version.outputs.MajorMinorPatch }}"
+
+      # - name: success
+      #   if: ${{ success() }}
+      #   env:
+      #     DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
+      #   uses: Ilshidur/action-discord@master
+      #   with:
+      #     args: 'The project {{ EVENT_PAYLOAD.repository.full_name }} has been deployed.'
+      # - name: fail
+      #   if: ${{ failure() }}
+      #   env:
+      #     DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
+      #   uses: Ilshidur/action-discord@master
+      #   with:
+      #     args: 'The project {{ EVENT_PAYLOAD.repository.full_name }} pipeline failure.'

@@ -1,0 +1,31 @@
+---
+- hosts: all
+  become: "no"
+  tasks:
+    - ansible.builtin.file:
+        path: "{{ ansible_facts['user_dir'] }}/apps"
+        state: directory
+      name: create apps directory
+    - ansible.builtin.file:
+        path: "{{ ansible_facts['user_dir'] }}/apps/backend"
+        state: directory
+      name: create workspace directory
+    - ansible.builtin.copy:
+        content: |
+          version: '3.9'
+          services:
+            backend:
+              image: ghcr.io/al3xdiaz/backend:{{ version | default('latest') }}
+              ports:
+                - "3000:80"
+        dest: "{{ ansible_facts['user_dir'] }}/apps/backend/docker-compose.yml"
+    - name: Prune everything (including non-dangling images)
+      ansible.builtin.docker_prune:
+        images: yes
+        containers: yes
+        volumes: yes
+        networks: yes
+    - ansible.builtin.docker_compose:
+        project_src: "{{ ansible_facts['user_dir'] }}/apps/backend"
+        project_name: backend
+        state: present
