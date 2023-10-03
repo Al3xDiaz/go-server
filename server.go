@@ -25,8 +25,6 @@ func RunServer() {
 
 	fs := http.FileServer(http.Dir("/static"))
 
-	r.PathPrefix("/").Handler(http.StripPrefix("/", fs))
-
 	r.HandleFunc("/auth/login", routes.Login).Methods("POST")
 	r.HandleFunc("/auth/signup", routes.SignUp).Methods("POST")
 	r.HandleFunc("/auth/userdata", utils.RequireAuth(routes.UserData)).Methods("GET")
@@ -34,6 +32,7 @@ func RunServer() {
 	r.HandleFunc("/commentaries", routes.GetCommentaries).Methods("GET")
 	r.HandleFunc("/commentaries/{id}", utils.RequirePermision(routes.GetCommentary)).Methods("GET")
 	r.HandleFunc("/commentaries", utils.RequireAuth(routes.CreateCommentary)).Methods("POST")
+	r.PathPrefix("/").Handler(http.StripPrefix("/", fs))
 	http.Handle("/", r)
 	http.ListenAndServe(":8000", nil)
 }
