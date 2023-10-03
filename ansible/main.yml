@@ -17,7 +17,7 @@
             backend:
               image: ghcr.io/al3xdiaz/backend:{{ version | default('latest') }}
               ports:
-                - "3000:80"
+                - "8000:8000"
         dest: "{{ ansible_facts['user_dir'] }}/apps/backend/docker-compose.yml"
     - name: Prune everything (including non-dangling images)
       ansible.builtin.docker_prune:
