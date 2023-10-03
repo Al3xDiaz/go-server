@@ -17,7 +17,7 @@
             backend:
               image: ghcr.io/al3xdiaz/backend:{{ version | default('latest') }}
               environment:
-                DSN: {{db_username}}:{{db_password}}@{{db_host}}/{{db_name}}?charset=utf8mb4&parseTime=True&loc=Local
+                DSN: {{db_username}}:{{db_password}}@tcp({{db_host}})/{{db_name}}?charset=utf8mb4&parseTime=True&loc=Local
               ports:
                 - "8000:8000"
         dest: "{{ ansible_facts['user_dir'] }}/apps/backend/docker-compose.yml"
