@@ -3,9 +3,11 @@ services:
   api:
     build: 
       context: .
-      dockerfile: dockerfile
+      dockerfile: dockerfile.prod
     depends_on:
       - db
+    environment:
+      DSN: ${DSN-golang:golang@tcp(db:3306)/gorm?charset=utf8mb4&parseTime=True&loc=Local}
     ports:
       - "8000:8000"
     volumes:

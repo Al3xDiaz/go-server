@@ -9,4 +9,4 @@ RUN go build .
 FROM scratch
 WORKDIR /app
 COPY --from=builder /go-server/go-server .
-CMD ["/app/go-server"]
+CMD ["/app/go-server","runserver"]
