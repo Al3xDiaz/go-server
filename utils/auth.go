@@ -94,6 +94,8 @@ func RequirePermision(next func(w http.ResponseWriter, r *http.Request)) http.Ha
 				}
 			}
 			Forbidden(w, map[string]string{"msg": "not authorized: " + r.URL.Path})
+		} else {
+			Unauthorized(w, map[string]string{"msg": "unauthorized"})
 		}
 	})
 }
