@@ -6,36 +6,30 @@ import (
 )
 
 func BadRequest(w http.ResponseWriter, msg string) {
-	w.Header().Add("Content-Type", "application/json")
-	w.WriteHeader(http.StatusBadRequest)
-	json.NewEncoder(w).Encode(map[string]string{"error": msg})
+	Response(&w, http.StatusBadRequest, map[string]string{"error": msg})
 }
 
 func InternalServerError(w http.ResponseWriter, msg string) {
-	w.Header().Add("Content-Type", "application/json")
-	w.WriteHeader(http.StatusInternalServerError)
-	json.NewEncoder(w).Encode(map[string]string{"error": msg})
+	Response(&w, http.StatusInternalServerError, map[string]string{"error": msg})
 }
 
 func NotFound(w http.ResponseWriter, msg string) {
-	w.Header().Add("Content-Type", "application/json")
-	w.WriteHeader(http.StatusNotFound)
-	json.NewEncoder(w).Encode(map[string]string{"error": msg})
+	Response(&w, http.StatusNotFound, map[string]string{"error": msg})
 }
 
 func Ok(w http.ResponseWriter, data interface{}) {
-	w.Header().Add("Content-Type", "application/json")
-	w.WriteHeader(http.StatusOK)
-	json.NewEncoder(w).Encode(data)
+	Response(&w, http.StatusOK, data)
 }
 func Unauthorized(w http.ResponseWriter, data interface{}) {
-	w.Header().Add("Content-Type", "application/json")
-	w.WriteHeader(http.StatusUnauthorized)
-	json.NewEncoder(w).Encode(data)
+	Response(&w, http.StatusUnauthorized, data)
 }
 
 func Forbidden(w http.ResponseWriter, data interface{}) {
-	w.Header().Add("Content-Type", "application/json")
-	w.WriteHeader(http.StatusForbidden)
-	json.NewEncoder(w).Encode(data)
+	Response(&w, http.StatusForbidden, data)
+}
+func Response(w *http.ResponseWriter, code int, data interface{}) {
+	(*w).Header().Set("Access-Control-Allow-Origin", "*")
+	(*w).Header().Add("Content-Type", "application/json")
+	(*w).WriteHeader(code)
+	json.NewEncoder(*w).Encode(data)
 }

@@ -23,11 +23,11 @@
         dest: "{{ ansible_facts['user_dir'] }}/apps/backend/docker-compose.yml"
     - name: Prune everything (including non-dangling images)
       ansible.builtin.docker_prune:
-        images: yes
         containers: yes
-        volumes: yes
+        images: yes
         networks: yes
+        volumes: yes
     - ansible.builtin.docker_compose:
-        project_src: "{{ ansible_facts['user_dir'] }}/apps/backend"
         project_name: backend
+        project_src: "{{ ansible_facts['user_dir'] }}/apps/backend"
         state: present
