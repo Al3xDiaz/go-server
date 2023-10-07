@@ -5,6 +5,8 @@ import (
 	"net/http"
 	"os"
 
+	"github.com/rs/cors"
+
 	"github.com/al3xdiaz/go-server/db"
 	"github.com/al3xdiaz/go-server/models"
 	"github.com/al3xdiaz/go-server/routes"
@@ -25,16 +27,18 @@ func RunServer() {
 
 	fs := http.FileServer(http.Dir("/static"))
 
-	r.HandleFunc("/auth/login", routes.Login).Methods("POST")
-	r.HandleFunc("/auth/signup", routes.SignUp).Methods("POST")
-	r.HandleFunc("/auth/userdata", utils.RequireAuth(routes.UserData)).Methods("GET")
+	r.HandleFunc("/auth/login", routes.Login).Methods(http.MethodPost, http.MethodOptions)
+	r.HandleFunc("/auth/signup", routes.SignUp).Methods(http.MethodPost, http.MethodOptions)
+	r.HandleFunc("/auth/userdata", utils.RequireAuth(routes.UserData)).Methods(http.MethodGet, http.MethodOptions)
 
-	r.HandleFunc("/commentaries", routes.GetCommentaries).Methods("GET")
-	r.HandleFunc("/commentaries/{id}", utils.RequirePermision(routes.GetCommentary)).Methods("GET")
-	r.HandleFunc("/commentaries", utils.RequireAuth(routes.CreateCommentary)).Methods("POST")
+	r.HandleFunc("/commentaries", routes.GetCommentaries).Methods(http.MethodGet, http.MethodOptions)
+	r.HandleFunc("/commentaries/{id}", utils.RequirePermision(routes.GetCommentary)).Methods(http.MethodGet, http.MethodOptions)
+	r.HandleFunc("/commentaries", utils.RequireAuth(routes.CreateCommentary)).Methods(http.MethodPost, http.MethodOptions)
 	r.PathPrefix("/").Handler(http.StripPrefix("/", fs))
+
 	http.Handle("/", r)
-	http.ListenAndServe(":8000", nil)
+	handler := cors.Default().Handler(r)
+	http.ListenAndServe(":8000", handler)
 }
 
 func main() {
