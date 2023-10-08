@@ -37,7 +37,13 @@ func RunServer() {
 	r.PathPrefix("/").Handler(http.StripPrefix("/", fs))
 
 	http.Handle("/", r)
-	handler := cors.Default().Handler(r)
+	handler := cors.New(cors.Options{
+		AllowedOrigins:   []string{"http://localhost:3000", "https://*.chaoticteam.com", "https://chaoticteam.com"},
+		AllowCredentials: true,
+		AllowedHeaders:   []string{"Authorization", "Content-Type"},
+		// Enable Debugging for testing, consider disabling in production
+		Debug: true,
+	}).Handler(r)
 	http.ListenAndServe(":8000", handler)
 }
 
