@@ -2,6 +2,7 @@ package routes
 
 import (
 	"encoding/json"
+	"log"
 	"net/http"
 
 	"github.com/al3xdiaz/go-server/db"
@@ -29,6 +30,7 @@ func GetCommentaries(w http.ResponseWriter, r *http.Request) {
 	var commentaries []models.Commentary
 	data := db.DB.Find(&commentaries)
 	if data.Error != nil {
+		log.Fatal(data.Error)
 		request.InternalServerError(w, "Error getting commentaries")
 		return
 	}

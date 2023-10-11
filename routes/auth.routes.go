@@ -36,7 +36,10 @@ func Login(w http.ResponseWriter, r *http.Request) {
 		utils.InternalServerError(w, "error create token")
 		return
 	}
-	utils.Ok(w, map[string]string{"token": token})
+	utils.Ok(w, map[string]interface{}{
+		"user":  user,
+		"token": token,
+	})
 }
 
 func SignUp(w http.ResponseWriter, r *http.Request) {
@@ -48,7 +51,18 @@ func SignUp(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		utils.BadRequest(w, err.Error())
 	}
-	utils.Ok(w, user)
+	token, err := utils.CreateJWT(map[string]any{
+		"username":   user.UserName,
+		"permisions": models.MakeMapString(user.Permisions),
+	})
+	if err != nil {
+		utils.InternalServerError(w, "error create token")
+		return
+	}
+	utils.Ok(w, map[string]interface{}{
+		"user":  user,
+		"token": token,
+	})
 }
 func UserData(w http.ResponseWriter, r *http.Request) {
 	_, data := utils.ValidateJWT(w, r)
