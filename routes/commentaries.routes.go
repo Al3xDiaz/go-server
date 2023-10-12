@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"log"
 	"net/http"
+	"net/url"
 
 	"github.com/al3xdiaz/go-server/db"
 	"github.com/al3xdiaz/go-server/models"
@@ -27,10 +28,11 @@ func GetCommentary(w http.ResponseWriter, r *http.Request) {
 
 func GetCommentaries(w http.ResponseWriter, r *http.Request) {
 	// ...
+	origin, _ := url.Parse(r.Header.Get("origin"))
 	var commentaries []models.Commentary
 	data := db.DB.
 		Joins("INNER JOIN sites s ON s.id = commentaries.site_id").
-		Where("s.url = ?", r.Host).
+		Where("s.url = ?", origin.Hostname()).
 		Find(&commentaries)
 	if data.Error != nil {
 		log.Fatal(data.Error)
@@ -41,13 +43,12 @@ func GetCommentaries(w http.ResponseWriter, r *http.Request) {
 }
 func CreateCommentary(w http.ResponseWriter, r *http.Request) {
 	// ...
+	origin, _ := url.Parse(r.Header.Get("origin"))
 	_, data := request.ValidateJWT(w, r)
 	username := data["username"]
-
-	log.Output(1, r.Host)
 	var site models.Site
 	db.DB.FirstOrCreate(&site, models.Site{
-		Url: r.Host,
+		Url: origin.Hostname(),
 	})
 
 	var commentary models.Commentary
