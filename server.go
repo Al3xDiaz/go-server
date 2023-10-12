@@ -20,8 +20,12 @@ func RunServer() {
 	db.Connect()
 	db.DB.AutoMigrate(models.User{})
 	db.DB.AutoMigrate(models.Permision{})
-
+	db.DB.AutoMigrate(models.Site{})
 	db.DB.AutoMigrate(models.Commentary{})
+
+	// db.DB.Exec("Delete from users")
+	// db.DB.Exec("Delete from commentaries")
+	// db.DB.Exec("Delete from sites")
 
 	r := mux.NewRouter().StrictSlash(true)
 

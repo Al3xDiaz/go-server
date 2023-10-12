@@ -10,4 +10,6 @@ type Commentary struct {
 	ID      uint   `json:"id" gorm:"primaryKey;autoIncrement"`
 	UserID  uint   `json:"userId"`
 	Comment string `json:"comment"`
+	SiteId  uint   `json:"-"`
+	Site    Site   `json:"-" gorm:"foreignKey:SiteId:association_foreignkey:id;foreignkey:id;constraint:OnUpdate:CASCADE,OnDelete:SET NULL;"`
 }

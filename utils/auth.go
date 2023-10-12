@@ -54,7 +54,13 @@ func ValidateJWT(w http.ResponseWriter, r *http.Request) (bool, map[string]inter
 
 		if token.Valid {
 			claims := token.Claims.(jwt.MapClaims)
-			return true, claims["data"].(map[string]interface{})
+			resp := claims["data"].(map[string]interface{})
+			var user models.User
+			search := db.DB.Find(&user, "user_name = ?", resp["username"])
+			if search.Error != nil || user.ID == 0 {
+				return false, nil
+			}
+			return true, resp
 		}
 	}
 	return false, nil
@@ -78,7 +84,7 @@ func RequirePermision(next func(w http.ResponseWriter, r *http.Request)) http.Ha
 		if valid {
 			var user models.User
 			db.DB.First(&user, "user_name = ?", data["username"])
-			db.DB.Model(&user).Association("Permisions").Find(&user.Permisions)
+			db.DB.Model(&user).Association("Permisions")
 
 			for _, v := range user.Permisions {
 				reg, err := regexp.Compile(v.Path)
