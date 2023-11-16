@@ -42,11 +42,11 @@ func RunServer() {
 
 	http.Handle("/", r)
 	handler := cors.New(cors.Options{
-		AllowedOrigins:   []string{"http://localhost:3000", "https://*.chaoticteam.com", "https://chaoticteam.com"},
+		AllowedOrigins:   []string{"http://localhost:3000", "https://alex.chaoticteam.com", "https://chaoticteam.com"},
 		AllowCredentials: true,
 		AllowedHeaders:   []string{"Authorization", "Content-Type"},
 		// Enable Debugging for testing, consider disabling in production
-		Debug: true,
+		Debug: false,
 	}).Handler(r)
 	http.ListenAndServe(":8000", handler)
 }
