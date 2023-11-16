@@ -1,16 +1,20 @@
 ---
-- hosts: all
-  become: "no"
+- name: Main | deploy api
+  become: false
+  hosts: all
   tasks:
-    - ansible.builtin.file:
+    - name: Create apps directory
+      ansible.builtin.file:
         path: "{{ ansible_facts['user_dir'] }}/apps"
         state: directory
-      name: create apps directory
-    - ansible.builtin.file:
+        mode: "0644"
+    - name: Create workspace directory
+      ansible.builtin.file:
         path: "{{ ansible_facts['user_dir'] }}/apps/backend"
         state: directory
-      name: create workspace directory
-    - ansible.builtin.copy:
+        mode: "0644"
+    - name: Create docker compose file
+      ansible.builtin.copy:
         content: |
           version: '3.9'
           services:
@@ -18,16 +22,19 @@
               image: ghcr.io/al3xdiaz/backend:{{ version | default('latest') }}
               environment:
                 DSN: {{ db_username }}:{{ db_password }}@tcp({{ db_host }})/gorm?charset=utf8mb4&parseTime=True&loc=Local
+                API_VERSION: {{ version }}
               ports:
                 - "8000:8000"
         dest: "{{ ansible_facts['user_dir'] }}/apps/backend/docker-compose.yml"
+        mode: "0644"
     - name: Prune everything (including non-dangling images)
-      ansible.builtin.docker_prune:
-        containers: yes
-        images: yes
-        networks: yes
-        volumes: yes
-    - ansible.builtin.docker_compose:
+      community.docker.docker_prune:
+        containers: true
+        images: true
+        networks: true
+        volumes: true
+    - name: Run container
+      community.docker.docker_compose:
         project_name: backend
         project_src: "{{ ansible_facts['user_dir'] }}/apps/backend"
         state: present
