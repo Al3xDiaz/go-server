@@ -1,6 +1,6 @@
 ---
 - name: Main | deploy api
-  become: false
+  become: true
   hosts: all
   tasks:
     - name: Create apps directory
