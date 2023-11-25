@@ -29,7 +29,7 @@ func RunServer() {
 
 	r := mux.NewRouter().StrictSlash(true)
 
-	fs := http.FileServer(http.Dir("/static"))
+	fs := http.FileServer(http.Dir("./static"))
 
 	r.HandleFunc("/version", routes.Version).Methods(http.MethodGet, http.MethodOptions)
 	r.HandleFunc("/auth/login", routes.Login).Methods(http.MethodPost, http.MethodOptions)
@@ -39,7 +39,7 @@ func RunServer() {
 	r.HandleFunc("/commentaries", routes.GetCommentaries).Methods(http.MethodGet, http.MethodOptions)
 	r.HandleFunc("/commentaries/{id}", utils.RequirePermision(routes.GetCommentary)).Methods(http.MethodGet, http.MethodOptions)
 	r.HandleFunc("/commentaries", utils.RequireAuth(routes.CreateCommentary)).Methods(http.MethodPost, http.MethodOptions)
-	r.PathPrefix("/docs").Handler(http.StripPrefix("/", fs))
+	r.PathPrefix("/").Handler(http.StripPrefix("/", fs))
 
 	http.Handle("/", r)
 	handler := cors.New(cors.Options{
@@ -47,7 +47,7 @@ func RunServer() {
 		AllowCredentials: true,
 		AllowedHeaders:   []string{"Authorization", "Content-Type"},
 		// Enable Debugging for testing, consider disabling in production
-		Debug: false,
+		Debug: true,
 	}).Handler(r)
 	http.ListenAndServe(":8000", handler)
 }

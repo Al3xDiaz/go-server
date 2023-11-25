@@ -1,4 +1,4 @@
-FROM python:3.9-slim-bullseye AS generatestaticfiles
+FROM python:3.9-slim-bullseye AS GENERATESTATICFILES
 ARG POSTMAN_DOC_GEN_VERSION=1.1.0
 WORKDIR /var/usr/data
 ADD  https://github.com/karthiks3000/postman-doc-gen/archive/refs/tags/${POSTMAN_DOC_GEN_VERSION}.tar.gz /var/usr/data/postman-doc-gen.tar.gz
@@ -7,7 +7,7 @@ WORKDIR /var/usr/data/postman-doc-gen-${POSTMAN_DOC_GEN_VERSION}
 RUN  pip install --upgrade pip && pip install  -r requirements.txt
 COPY ./postmanfiles/ .
 
-RUN mkdir /static && python postman_doc_gen/postman_doc_gen.py collection.json -e environment.json -o /static
+RUN python postman_doc_gen/postman_doc_gen.py collection.json -e environment.json -o .
 
 FROM golang:1.21.1-alpine AS builder
 WORKDIR /go-server
@@ -19,6 +19,6 @@ RUN go build .
 # Path: /app
 FROM scratch
 WORKDIR /app
-COPY --from=generatestaticfiles /static /static
+COPY --from=GENERATESTATICFILES /var/usr/data/postmanfiles ./postmanfiles
 COPY --from=builder /go-server/go-server .
 CMD ["/app/go-server","runserver"]

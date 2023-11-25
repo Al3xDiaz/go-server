@@ -3,7 +3,7 @@ services:
   api:
     build:
       context: .
-      dockerfile: dockerfile
+      dockerfile: ${DOCKEFILE-dockerfile}
     depends_on:
       - db
     environment:
@@ -13,6 +13,8 @@ services:
       - "8000:8000"
     volumes:
       - ./:/go-server
+      - /go-server/static
+    restart: unless-stopped
   db:
     environment:
       - MYSQL_ROOT_PASSWORD=123456
