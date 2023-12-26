@@ -38,7 +38,7 @@ func RunServer() {
 
 	r.HandleFunc("/commentaries", routes.GetCommentaries).Methods(http.MethodGet, http.MethodOptions)
 	r.HandleFunc("/commentaries/{id}", utils.RequireAuth(routes.GetCommentary)).Methods(http.MethodGet, http.MethodOptions)
-	r.HandleFunc("/commentaries/{id}", utils.RequireAuth(routes.DeleteCommentary)).Methods(http.MethodDelete, http.MethodOptions)
+	r.HandleFunc("/commentaries/{id}", utils.HandlerCors(utils.RequireAuth(routes.DeleteCommentary))).Methods(http.MethodDelete, http.MethodOptions)
 	r.HandleFunc("/commentaries", utils.RequireAuth(routes.CreateCommentary)).Methods(http.MethodPost, http.MethodOptions)
 	r.PathPrefix("/").Handler(http.StripPrefix("/", fs))
 
@@ -47,7 +47,6 @@ func RunServer() {
 		AllowedOrigins:   []string{"*"},
 		AllowCredentials: true,
 		AllowedHeaders:   []string{"Authorization", "Content-Type"},
-		AllowedMethods:   []string{"*"},
 
 		// Enable Debugging for testing, consider disabling in production
 		Debug: true,
