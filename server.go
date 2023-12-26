@@ -14,7 +14,7 @@ import (
 	"gorm.io/gorm"
 )
 
-func RunServer() {
+func newREST() *mux.Router {
 
 	db.Connect()
 	db.DB.AutoMigrate(models.User{})
@@ -22,15 +22,7 @@ func RunServer() {
 	db.DB.AutoMigrate(models.Site{})
 	db.DB.AutoMigrate(models.Commentary{})
 
-	// db.DB.Exec("Delete from users")
-	// db.DB.Exec("Delete from commentaries")
-	// db.DB.Exec("Delete from sites")
-
 	r := mux.NewRouter().StrictSlash(true)
-
-	credentials := handlers.AllowCredentials()
-	methods := handlers.AllowedMethods([]string{"POST"})
-	origins := handlers.AllowedOrigins([]string{"www.example.com"})
 
 	fs := http.FileServer(http.Dir("./static"))
 
@@ -40,21 +32,21 @@ func RunServer() {
 	r.HandleFunc("/auth/userdata", utils.RequireAuth(routes.UserData)).Methods(http.MethodGet, http.MethodOptions)
 
 	r.HandleFunc("/commentaries", routes.GetCommentaries).Methods(http.MethodGet, http.MethodOptions)
-	r.HandleFunc("/commentaries/{id}", utils.HandlerCors(utils.RequireAuth(routes.GetCommentary))).Methods(http.MethodGet, http.MethodOptions)
-	r.HandleFunc("/commentaries/{id}", utils.HandlerCors(utils.RequireAuth(routes.DeleteCommentary))).Methods(http.MethodDelete, http.MethodOptions)
+	r.HandleFunc("/commentaries/{id}", utils.RequireAuth(routes.GetCommentary)).Methods(http.MethodGet, http.MethodOptions)
+	r.HandleFunc("/commentaries/{id}", utils.RequireAuth(routes.DeleteCommentary)).Methods(http.MethodDelete, http.MethodOptions)
 	r.HandleFunc("/commentaries", utils.RequireAuth(routes.CreateCommentary)).Methods(http.MethodPost, http.MethodOptions)
 	r.PathPrefix("/").Handler(http.StripPrefix("/", fs))
 
 	http.Handle("/", r)
-	// handler := cors.New(cors.Options{
-	// 	AllowedOrigins:   []string{"*"},
-	// 	AllowCredentials: true,
-	// 	AllowedHeaders:   []string{"*"},
-
-	// 	// Enable Debugging for testing, consider disabling in production
-	// 	Debug: true,
-	// }).Handler(r)
-	log.Fatal(http.ListenAndServe(":8000", handlers.CORS(credentials, methods, origins)(r)))
+	return r
+}
+func RunServer() {
+	router := newREST()
+	credentials := handlers.AllowCredentials()
+	methods := handlers.AllowedMethods([]string{"*"})
+	ttl := handlers.MaxAge(3600)
+	origins := handlers.AllowedOrigins([]string{"*"})
+	log.Fatal(http.ListenAndServe(":8000", handlers.CORS(credentials, methods, origins)(router)), ttl)
 }
 
 func main() {
@@ -64,6 +56,11 @@ func main() {
 		RunServer()
 	case "permisions":
 		SelectUser()
+	case "cleandata":
+		db.Connect()
+		db.DB.Exec("Delete from users")
+		db.DB.Exec("Delete from commentaries")
+		db.DB.Exec("Delete from sites")
 	default:
 		log.Output(0, "command not found")
 	}
