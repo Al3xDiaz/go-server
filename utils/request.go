@@ -32,9 +32,12 @@ func Forbidden(w http.ResponseWriter, data interface{}) {
 }
 func Response(w *http.ResponseWriter, code int, data interface{}) {
 	(*w).Header().Set("Access-Control-Allow-Origin", "*")
-	(*w).Header().Set("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, DELETE")
+	(*w).Header().Set("Access-Control-Allow-Methods", "GET, POST,OPTIONS, PUT, DELETE")
 	(*w).Header().Add("Content-Type", "application/json")
 	(*w).Header().Add("Access-Control-Allow-Headers", "Authorization, content-type")
 	(*w).WriteHeader(code)
 	json.NewEncoder(*w).Encode(data)
+}
+func EnableCors(w *http.ResponseWriter) {
+	(*w).Header().Set("Access-Control-Allow-Origin", "*")
 }

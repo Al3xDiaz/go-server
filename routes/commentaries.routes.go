@@ -66,6 +66,7 @@ func CreateCommentary(w http.ResponseWriter, r *http.Request) {
 	request.Ok(w, commentary)
 }
 func DeleteCommentary(w http.ResponseWriter, r *http.Request) {
+	request.EnableCors(&w)
 	// ...
 	var commentary models.Commentary
 
