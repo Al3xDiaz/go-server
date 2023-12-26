@@ -52,7 +52,7 @@ func RunServer() {
 		http.MethodDelete,
 		http.MethodOptions,
 	})
-	origins := handlers.AllowedOrigins([]string{"*"})
+	origins := handlers.AllowedOrigins([]string{"https://alex.chaoticteam.com", "http://localhost:3000"})
 	headers := handlers.AllowedHeaders([]string{"Authorization", "content-type", "X-Requested-With"})
 	log.Fatal(http.ListenAndServe(":8000", handlers.CORS(credentials, methods, origins, headers)(router)))
 }
