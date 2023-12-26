@@ -5,12 +5,11 @@ import (
 	"net/http"
 	"os"
 
-	"github.com/rs/cors"
-
 	"github.com/al3xdiaz/go-server/db"
 	"github.com/al3xdiaz/go-server/models"
 	"github.com/al3xdiaz/go-server/routes"
 	"github.com/al3xdiaz/go-server/utils"
+	"github.com/gorilla/handlers"
 	"github.com/gorilla/mux"
 	"gorm.io/gorm"
 )
@@ -29,6 +28,10 @@ func RunServer() {
 
 	r := mux.NewRouter().StrictSlash(true)
 
+	credentials := handlers.AllowCredentials()
+	methods := handlers.AllowedMethods([]string{"POST"})
+	origins := handlers.AllowedOrigins([]string{"www.example.com"})
+
 	fs := http.FileServer(http.Dir("./static"))
 
 	r.HandleFunc("/version", routes.Version).Methods(http.MethodGet, http.MethodOptions)
@@ -43,15 +46,15 @@ func RunServer() {
 	r.PathPrefix("/").Handler(http.StripPrefix("/", fs))
 
 	http.Handle("/", r)
-	handler := cors.New(cors.Options{
-		AllowedOrigins:   []string{"*"},
-		AllowCredentials: true,
-		AllowedHeaders:   []string{"Authorization", "Content-Type"},
+	// handler := cors.New(cors.Options{
+	// 	AllowedOrigins:   []string{"*"},
+	// 	AllowCredentials: true,
+	// 	AllowedHeaders:   []string{"*"},
 
-		// Enable Debugging for testing, consider disabling in production
-		Debug: true,
-	}).Handler(r)
-	http.ListenAndServe(":8000", handler)
+	// 	// Enable Debugging for testing, consider disabling in production
+	// 	Debug: true,
+	// }).Handler(r)
+	log.Fatal(http.ListenAndServe(":8000", handlers.CORS(credentials, methods, origins)(r)))
 }
 
 func main() {
