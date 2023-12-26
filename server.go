@@ -53,7 +53,7 @@ func RunServer() {
 		http.MethodOptions,
 	})
 	origins := handlers.AllowedOrigins([]string{"*"})
-	headers := handlers.AllowedHeaders([]string{"X-Requested-With"})
+	headers := handlers.AllowedHeaders([]string{"Authorization", "content-type", "X-Requested-With"})
 	log.Fatal(http.ListenAndServe(":8000", handlers.CORS(credentials, methods, origins, headers)(router)))
 }
 
