@@ -39,9 +39,11 @@ func EnableCors(w *http.ResponseWriter) {
 }
 func HandlerCors(next func(w http.ResponseWriter, r *http.Request)) http.HandlerFunc {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		(w).Header().Set("Access-Control-Allow-Origin", "*")
-		(w).Header().Set("Access-Control-Allow-Origin", "*")
-		(w).Header().Set("Access-Control-Allow-Methods", "GET, POST,OPTIONS, PUT, DELETE")
+		w.Header().Add("Connection", "keep-alive")
+		w.Header().Add("Access-Control-Allow-Origin", "*")
+		w.Header().Add("Access-Control-Allow-Methods", "POST, OPTIONS, GET, DELETE, PUT")
+		w.Header().Add("Access-Control-Max-Age", "86400")
+
 		(w).Header().Add("Content-Type", "application/json")
 		(w).Header().Add("Access-Control-Allow-Headers", "Authorization, content-type")
 		if r.Method == http.MethodOptions {
