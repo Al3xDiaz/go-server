@@ -42,12 +42,13 @@ func newREST() *mux.Router {
 }
 func RunServer() {
 	router := newREST()
-	credentials := handlers.AllowCredentials()
-	methods := handlers.AllowedMethods([]string{"POST, OPTIONS, GET, DELETE, PUT"})
-	headers := handlers.AllowedHeaders([]string{"*"})
-	ttl := handlers.MaxAge(3600)
-	origins := handlers.AllowedOrigins([]string{"*"})
-	log.Fatal(http.ListenAndServe(":8000", handlers.CORS(credentials, methods, origins, ttl, headers)(router)))
+	// credentials := handlers.AllowCredentials()
+	// methods := handlers.AllowedMethods([]string{"POST, OPTIONS, GET, DELETE, PUT"})
+	// headers := handlers.AllowedHeaders([]string{"*"})
+	// ttl := handlers.MaxAge(3600)
+	// origins := handlers.AllowedOrigins([]string{"*"})
+	// log.Fatal(http.ListenAndServe(":8000", handlers.CORS(credentials, methods, origins, ttl, headers)(router)))
+	log.Fatal(http.ListenAndServe(":8000", handlers.CORS()(router)))
 }
 
 func main() {
