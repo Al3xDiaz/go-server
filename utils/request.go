@@ -50,8 +50,8 @@ func HandlerCors(next func(w http.ResponseWriter, r *http.Request)) http.Handler
 		(w).Header().Add("Access-Control-Allow-Headers", "Authorization, content-type")
 		if r.Method == http.MethodOptions {
 			NoContend(w)
+			return
 		}
 		next(w, r)
-		return
 	})
 }
