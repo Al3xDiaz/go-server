@@ -43,7 +43,15 @@ func newREST() *mux.Router {
 func RunServer() {
 	router := newREST()
 	credentials := handlers.AllowCredentials()
-	methods := handlers.AllowedMethods([]string{"GET", "HEAD", "POST", "PUT", "OPTIONS", "OPTIONS"})
+	methods := handlers.AllowedMethods([]string{
+		// "GET", "HEAD", "POST", "PUT", "DELETE", "OPTIONS"
+		http.MethodGet,
+		http.MethodHead,
+		http.MethodPost,
+		http.MethodPut,
+		http.MethodDelete,
+		http.MethodOptions,
+	})
 	origins := handlers.AllowedOrigins([]string{"*"})
 	headers := handlers.AllowedHeaders([]string{"X-Requested-With"})
 	log.Fatal(http.ListenAndServe(":8000", handlers.CORS(credentials, methods, origins, headers)(router)))
