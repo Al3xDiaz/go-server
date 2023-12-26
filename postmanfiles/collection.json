@@ -11,6 +11,19 @@
 			"item": [
 				{
 					"name": "signup",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"if (pm.response.code === 200) {",
+									"\tpm.environment.set(\"accessToken\", pm.response.json().token);",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
 					"request": {
 						"method": "POST",
 						"header": [],
@@ -71,16 +84,10 @@
 					],
 					"request": {
 						"method": "POST",
-						"header": [
-							{
-								"key": "Access",
-								"value": "1234",
-								"type": "default"
-							}
-						],
+						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"userName\":\"{{username}}\",\n    \"password\":\"{{password}}\"\n}",
+							"raw": "{\n    \"username\":\"{{username}}\",\n    \"password\":\"{{password}}\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -125,9 +132,18 @@
 				},
 				{
 					"name": "/commentaries",
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {}
+					},
 					"request": {
 						"method": "GET",
-						"header": [],
+						"header": [
+							{
+								"key": "Origin",
+								"value": "http://localhost:3000",
+								"type": "text"
+							}
+						],
 						"url": {
 							"raw": "{{url}}/commentaries",
 							"host": [
@@ -142,12 +158,15 @@
 				},
 				{
 					"name": "/commentaries",
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {}
+					},
 					"request": {
 						"method": "POST",
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"comment\":\"hello world\"\n}",
+							"raw": "{\n    \"comment\":\"Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -161,6 +180,24 @@
 							],
 							"path": [
 								"commentaries"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/commentaries/{id}",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/commentaries/1",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"commentaries",
+								"1"
 							]
 						}
 					},

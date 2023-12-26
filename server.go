@@ -37,7 +37,7 @@ func RunServer() {
 	r.HandleFunc("/auth/userdata", utils.RequireAuth(routes.UserData)).Methods(http.MethodGet, http.MethodOptions)
 
 	r.HandleFunc("/commentaries", routes.GetCommentaries).Methods(http.MethodGet, http.MethodOptions)
-	r.HandleFunc("/commentaries/{id}", utils.RequirePermision(routes.GetCommentary)).Methods(http.MethodGet, http.MethodOptions)
+	r.HandleFunc("/commentaries/{id}", utils.RequireAuth(routes.GetCommentary)).Methods(http.MethodGet, http.MethodOptions)
 	r.HandleFunc("/commentaries/{id}", utils.RequireAuth(routes.DeleteCommentary)).Methods(http.MethodDelete, http.MethodOptions)
 	r.HandleFunc("/commentaries", utils.RequireAuth(routes.CreateCommentary)).Methods(http.MethodPost, http.MethodOptions)
 	r.PathPrefix("/").Handler(http.StripPrefix("/", fs))

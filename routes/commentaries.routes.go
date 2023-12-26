@@ -2,6 +2,7 @@ package routes
 
 import (
 	"encoding/json"
+	"fmt"
 	"log"
 	"net/http"
 	"net/url"
@@ -70,8 +71,16 @@ func DeleteCommentary(w http.ResponseWriter, r *http.Request) {
 
 	// Get params
 	params := mux.Vars(r)
-	data := db.DB.First(&commentary, params["id"])
-	if data.Error != nil {
+	id := params["id"]
+	_, data := request.ValidateJWT(w, r)
+	username := data["username"]
+	response := db.DB.
+		Joins("INNER JOIN users u ON u.id = commentaries.user_id").
+		Where("commentaries.id = ?", id).
+		Where("u.user_name = ?", username).
+		First(&commentary)
+	if response.Error != nil {
+		fmt.Printf(response.Error.Error())
 		request.NotFound(w, "Commentary not found")
 		return
 	}
