@@ -47,7 +47,7 @@ func RunServer() {
 	headers := handlers.AllowedHeaders([]string{"*"})
 	ttl := handlers.MaxAge(3600)
 	origins := handlers.AllowedOrigins([]string{"*"})
-	log.Fatal(http.ListenAndServe(":8000", handlers.CORS(credentials, methods, origins)(router)), ttl, headers)
+	log.Fatal(http.ListenAndServe(":8000", handlers.CORS(credentials, methods, origins, ttl, headers)(router)))
 }
 
 func main() {
