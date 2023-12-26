@@ -47,6 +47,8 @@ func RunServer() {
 		AllowedOrigins:   []string{"*"},
 		AllowCredentials: true,
 		AllowedHeaders:   []string{"Authorization", "Content-Type"},
+		AllowedMethods:   []string{"*"},
+
 		// Enable Debugging for testing, consider disabling in production
 		Debug: true,
 	}).Handler(r)
