@@ -64,3 +64,17 @@ func CreateCommentary(w http.ResponseWriter, r *http.Request) {
 	}
 	request.Ok(w, commentary)
 }
+func DeleteCommentary(w http.ResponseWriter, r *http.Request) {
+	// ...
+	var commentary models.Commentary
+
+	// Get params
+	params := mux.Vars(r)
+	data := db.DB.First(&commentary, params["id"])
+	if data.Error != nil {
+		request.NotFound(w, "Commentary not found")
+		return
+	}
+	db.DB.Delete(&commentary)
+	request.NoContend(w)
+}

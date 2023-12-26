@@ -20,6 +20,9 @@ func NotFound(w http.ResponseWriter, msg string) {
 func Ok(w http.ResponseWriter, data interface{}) {
 	Response(&w, http.StatusOK, data)
 }
+func NoContend(w http.ResponseWriter) {
+	Response(&w, http.StatusNoContent, nil)
+}
 func Unauthorized(w http.ResponseWriter, data interface{}) {
 	Response(&w, http.StatusUnauthorized, data)
 }
