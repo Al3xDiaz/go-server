@@ -1,6 +1,10 @@
 package services
 
 import (
+	"encoding/json"
+	"errors"
+	"io"
+
 	"github.com/al3xdiaz/go-server/models"
 	"gorm.io/gorm"
 )
@@ -20,4 +24,15 @@ func (o ProfileService) GetData(username string) (model models.User, err error) 
 		return user, err
 	}
 	return user, err
+}
+
+func (o ProfileService) UpdateProfile(username string, Body io.ReadCloser) (model models.User, err error) {
+	user, err := o.GetData(username)
+	if err != nil {
+		return user, errors.New("user not exist")
+	}
+	json.NewDecoder(Body).Decode(&user.Profile)
+	o.DB.Save(&user.Profile)
+
+	return user, nil
 }

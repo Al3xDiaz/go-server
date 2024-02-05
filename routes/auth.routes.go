@@ -2,7 +2,6 @@ package routes
 
 import (
 	"encoding/json"
-	"log"
 	"net/http"
 
 	"github.com/al3xdiaz/go-server/db"
@@ -49,8 +48,6 @@ func SignUp(w http.ResponseWriter, r *http.Request) {
 	var user models.User
 	json.NewDecoder(r.Body).Decode(&user)
 
-	log.Print(user)
-
 	createdUser := db.DB.Create(&user)
 	err := createdUser.Error
 	if err != nil {
@@ -84,5 +81,22 @@ func UserData(w http.ResponseWriter, r *http.Request) {
 	}
 	db.DB.Model(&user).Association("Permisions").Find(&user.Permisions)
 
+	utils.Ok(w, user)
+}
+
+func UpdateProfile(w http.ResponseWriter, r *http.Request) {
+	// var profile models.Profile
+
+	_, data := utils.ValidateJWT(w, r)
+	username := data["username"]
+
+	service := services.ProfileService{
+		DB: db.DB,
+	}
+	user, err := service.UpdateProfile(username.(string), r.Body)
+	if err != nil {
+		utils.InternalServerError(w, err.Error())
+		return
+	}
 	utils.Ok(w, user)
 }
