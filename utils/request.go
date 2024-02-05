@@ -31,6 +31,7 @@ func Forbidden(w http.ResponseWriter, data interface{}) {
 	Response(&w, http.StatusForbidden, data)
 }
 func Response(w *http.ResponseWriter, code int, data interface{}) {
+	(*w).Header().Add("Content-Type", "application/json")
 	(*w).WriteHeader(code)
 	json.NewEncoder(*w).Encode(data)
 }
@@ -44,7 +45,6 @@ func HandlerCors(next func(w http.ResponseWriter, r *http.Request)) http.Handler
 		w.Header().Add("Access-Control-Allow-Methods", "POST, OPTIONS, GET, DELETE, PUT")
 		w.Header().Add("Access-Control-Max-Age", "86400")
 
-		(w).Header().Add("Content-Type", "application/json")
 		(w).Header().Add("Access-Control-Allow-Headers", "Authorization, content-type")
 		if r.Method == http.MethodOptions {
 			NoContend(w)

@@ -1,14 +1,14 @@
+---
 name: CI backend
 
 on:
   push:
     # Publish `master` as Docker `latest` image.
     branches:
-      - 'main'
+      - main
   workflow_dispatch:
-
 env:
-  REGISTRY: "ghcr.io/${{ github.repository_owner }}"
+  REGISTRY: ghcr.io/${{ github.repository_owner }}
   # WEBHOOK_ID: "${{ secrets.WEBHOOK_ID }}"
   # WEBHOOK_TOKEN: "${{ secrets.WEBHOOK_TOKEN }}"
   GIT_STRATEGY: fetch
@@ -24,17 +24,16 @@ jobs:
       MajorMinorPatch: ${{ steps.gitversion.outputs.majorMinorPatch }}
       FullSemVer: ${{ steps.gitversion.outputs.fullSemVer }}
     steps:
-      -
-        name: Checkout
+      - name: Checkout
         uses: actions/checkout@v3
         with:
           fetch-depth: 0
       - name: Install GitVersion
         uses: gittools/actions/gitversion/setup@v0
         with:
-          versionSpec: '5.x'
+          versionSpec: 5.x
       - name: Determine Version
-        id:   gitversion # id to later be referenced
+        id: gitversion # id to later be referenced
         uses: gittools/actions/gitversion/execute@v0
       - name: Set Outputs major version
         id: set-outputs-major
@@ -49,10 +48,9 @@ jobs:
       packages: write
       contents: read
     needs: [calculate-version]
-
     steps:
       - uses: actions/checkout@v3
-      
+
       - name: Build docker image
         run: |
           echo "build image"
@@ -77,11 +75,11 @@ jobs:
             docker push $IMAGE_ID:latest
           fi
   deploy:
-      runs-on: ubuntu-latest
-      container:
-        image: registry.gitlab.com/chaoticteams/ansible:latest
-      needs: [calculate-version,build]
-      steps:
+    runs-on: ubuntu-latest
+    container:
+      image: registry.gitlab.com/chaoticteams/ansible:latest
+    needs: [calculate-version, build]
+    steps:
       - uses: actions/checkout@v3
       - name: get gitlab artifact and create ssh key
         run: |

@@ -17,16 +17,20 @@ import (
 func newREST() *mux.Router {
 
 	db.Connect()
-	db.DB.AutoMigrate(models.User{})
-	db.DB.AutoMigrate(models.Permision{})
-	db.DB.AutoMigrate(models.Site{})
-	db.DB.AutoMigrate(models.Commentary{})
+	db.DB.AutoMigrate(
+		models.User{},
+		models.Profile{},
+		models.Permision{},
+		models.Site{},
+		models.Commentary{},
+	)
 
 	r := mux.NewRouter().StrictSlash(true)
 
 	fs := http.FileServer(http.Dir("./static"))
 
 	r.HandleFunc("/version", routes.Version).Methods(http.MethodGet)
+	r.HandleFunc("/vcard/{username}", routes.VCard).Methods(http.MethodGet)
 	r.HandleFunc("/auth/login", routes.Login).Methods(http.MethodPost)
 	r.HandleFunc("/auth/signup", routes.SignUp).Methods(http.MethodPost)
 	r.HandleFunc("/auth/userdata", utils.RequireAuth(routes.UserData)).Methods(http.MethodGet)
@@ -35,6 +39,7 @@ func newREST() *mux.Router {
 	r.HandleFunc("/commentaries/{id}", utils.RequireAuth(routes.GetCommentary)).Methods(http.MethodGet)
 	r.HandleFunc("/commentaries/{id}", utils.RequireAuth(routes.DeleteCommentary)).Methods(http.MethodDelete)
 	r.HandleFunc("/commentaries", utils.RequireAuth(routes.CreateCommentary)).Methods(http.MethodPost)
+
 	r.PathPrefix("/").Handler(http.StripPrefix("/", fs))
 
 	http.Handle("/", r)
@@ -65,10 +70,12 @@ func main() {
 	case "permisions":
 		SelectUser()
 	case "cleandata":
+		log.Output(0, "cleaning data...")
 		db.Connect()
 		db.DB.Exec("Delete from users")
 		db.DB.Exec("Delete from commentaries")
 		db.DB.Exec("Delete from sites")
+		log.Output(0, "data cleaned")
 	default:
 		log.Output(0, "command not found")
 	}

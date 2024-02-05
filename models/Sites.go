@@ -7,7 +7,7 @@ import (
 type Site struct {
 	gorm.Model
 
-	ID          uint   `json:"id" gorm:"primaryKey;autoIncrement"`
+	ID          uint   `json:"id" gorm:"primaryKey;autoIncrement,null"`
 	Url         string `json:"url" gorm:"type=varchar(100);unique;not null"`
 	Description string `json:"description" gorm:"type=varchar(100)"`
 }
