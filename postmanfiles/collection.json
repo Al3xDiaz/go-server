@@ -29,7 +29,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"userName\":\"{{username}}\",\n    \"password\":\"{{password}}\",\n    \"firstName\":\"alex\",\n    \"lastName\":\"diaz\",\n    \"email\":\"{{email}}\"\n}",
+							"raw": "{\n    \"userName\":\"{{username}}\",\n    \"password\":\"{{password}}\",\n    \"email\":\"{{email}}\",\n    \"profile\":{\n        \"firstName\":\"alex\",\n        \"lastName\":\"diaz\"\n    }\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -106,6 +106,33 @@
 						}
 					},
 					"response": []
+				},
+				{
+					"name": "profile",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"firstName\":\"Alex\",\n    \"lastName\":\"Diaz\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/auth/profile",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"auth",
+								"profile"
+							]
+						}
+					},
+					"response": []
 				}
 			]
 		},
@@ -118,13 +145,13 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{url}}/commentaries/1",
+							"raw": "{{url}}/commentaries/8",
 							"host": [
 								"{{url}}"
 							],
 							"path": [
 								"commentaries",
-								"1"
+								"8"
 							]
 						}
 					},
@@ -191,19 +218,99 @@
 						"method": "DELETE",
 						"header": [],
 						"url": {
-							"raw": "{{url}}/commentaries/1",
+							"raw": "{{url}}/commentaries/15",
 							"host": [
 								"{{url}}"
 							],
 							"path": [
 								"commentaries",
-								"1"
+								"15"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/commentaries/{id}",
+					"request": {
+						"method": "OPTIONS",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/commentaries/17",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"commentaries",
+								"17"
 							]
 						}
 					},
 					"response": []
 				}
 			]
+		},
+		{
+			"name": "vcard",
+			"item": [
+				{
+					"name": "vcard",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/vcard/admin",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"vcard",
+								"admin"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "user",
+			"item": [
+				{
+					"name": "getusers",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/users",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"users"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "version",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{url}}/version",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"version"
+					]
+				}
+			},
+			"response": []
 		}
 	],
 	"auth": {
