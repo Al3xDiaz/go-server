@@ -100,3 +100,14 @@ func UpdateProfile(w http.ResponseWriter, r *http.Request) {
 	}
 	utils.Ok(w, user)
 }
+func GetUsers(w http.ResponseWriter, r *http.Request) {
+	service := services.UserService{
+		DB: db.DB,
+	}
+	users, err := service.GetUsers()
+	if err != nil {
+		utils.InternalServerError(w, err.Error())
+		return
+	}
+	utils.Ok(w, users)
+}
