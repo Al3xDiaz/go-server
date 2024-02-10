@@ -1,18 +1,20 @@
 ---
 - name: Main | deploy api
-  become: true
+  become: false
   hosts: all
   tasks:
     - name: Create apps directory
       ansible.builtin.file:
         path: "{{ ansible_facts['user_dir'] }}/apps"
         state: directory
-        mode: "0644"
+        mode: "0755"
+        owner: "{{ ansible_user }}"
+
     - name: Create workspace directory
       ansible.builtin.file:
         path: "{{ ansible_facts['user_dir'] }}/apps/backend"
         state: directory
-        mode: "0644"
+        mode: "0755"
     - name: Create docker compose file
       ansible.builtin.copy:
         content: |
@@ -26,7 +28,8 @@
               ports:
                 - "8000:8000"
         dest: "{{ ansible_facts['user_dir'] }}/apps/backend/docker-compose.yml"
-        mode: "0644"
+        mode: u=rw,g=rw,o=r
+
     - name: Prune everything (including non-dangling images)
       community.docker.docker_prune:
         containers: true
