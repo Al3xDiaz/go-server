@@ -3,7 +3,7 @@ services:
   api:
     build:
       context: .
-      dockerfile: ${DOCKEFILE-dockerfile}
+      dockerfile: ${DOCKERFILE-dockerfile}
     depends_on:
       - db
     environment:
@@ -26,5 +26,10 @@ services:
       - db_data:/var/lib/mysql
     ports:
       - 3306:3306
+  # adminer:
+  #   image: adminer
+  #   restart: always
+  #   ports:
+  #     - 8080:8080
 volumes:
   db_data:

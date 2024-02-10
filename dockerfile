@@ -9,7 +9,7 @@ COPY ./postmanfiles/ .
 RUN python postman_doc_gen/postman_doc_gen.py collection.json -e environment.json -o /var/usr/static
 
 # Choose whatever you want, version >= 1.16
-FROM golang:1.21-alpine
+FROM golang:1.21.1-alpine
 WORKDIR /go-server
 RUN go install github.com/cosmtrek/air@latest
 COPY go.mod go.sum ./
