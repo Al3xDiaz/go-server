@@ -27,8 +27,6 @@ func newREST() *mux.Router {
 
 	r := mux.NewRouter().StrictSlash(true)
 
-	fs := http.FileServer(http.Dir("./static"))
-
 	r.HandleFunc("/version", routes.Version).Methods(http.MethodGet)
 	r.HandleFunc("/vcard/{username}", routes.VCard).Methods(http.MethodGet)
 
@@ -43,8 +41,6 @@ func newREST() *mux.Router {
 	r.HandleFunc("/commentaries/{id}", utils.RequireAuth(routes.GetCommentary)).Methods(http.MethodGet)
 	r.HandleFunc("/commentaries/{id}", utils.RequireAuth(routes.DeleteCommentary)).Methods(http.MethodDelete)
 	r.HandleFunc("/commentaries", utils.RequireAuth(routes.CreateCommentary)).Methods(http.MethodPost)
-
-	r.PathPrefix("/").Handler(http.StripPrefix("/", fs))
 
 	http.Handle("/", r)
 	return r
@@ -61,7 +57,8 @@ func RunServer() {
 		http.MethodDelete,
 		http.MethodOptions,
 	})
-	origins := handlers.AllowedOrigins([]string{"https://alex.chaoticteam.com", "http://localhost:3000"})
+	// origins := handlers.AllowedOrigins([]string{"https://alex.chaoticteam.com", "http://localhost:3000"})
+	origins := handlers.AllowedOrigins([]string{"*"})
 	headers := handlers.AllowedHeaders([]string{"Authorization", "content-type", "X-Requested-With"})
 	log.Fatal(http.ListenAndServe(":8000", handlers.CORS(credentials, methods, origins, headers)(router)))
 }
