@@ -20,6 +20,8 @@ func newREST() *mux.Router {
 	db.DB.AutoMigrate(
 		models.User{},
 		models.Profile{},
+		models.Telephone{},
+		models.Course{},
 		models.Permision{},
 		models.Site{},
 		models.Commentary{},

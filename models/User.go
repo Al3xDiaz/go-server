@@ -3,7 +3,6 @@ package models
 import (
 	"crypto/sha256"
 	"encoding/hex"
-	"fmt"
 
 	"gorm.io/gorm"
 )
@@ -21,6 +20,7 @@ type User struct {
 	Email    string `json:"email" gorm:"type:varchar(50);not null"`
 	Password string `json:"password,omitempty" gorm:"size:255"`
 	Verified bool   `json:"verified" gorm:"default=false"`
+	Staff    bool   `json:"staff" gorm:"default=false"`
 
 	Permisions []*Permision `gorm:"many2many:UserPermision;association_foreignkey:id;foreignkey:id"`
 	Profile    Profile      `json:"profile"`
@@ -28,12 +28,14 @@ type User struct {
 type Profile struct {
 	gorm.Model
 
-	ID        uint   `json:"id" gorm:"primaryKey;autoIncrement"`
-	UserID    uint   `json:"userId" gorm:"not null"`
+	ID     uint `json:"id" gorm:"primaryKey;autoIncrement"`
+	UserID uint `json:"userId" gorm:"not null"`
+
+	// personal info
 	FirstName string `json:"firstName" gorm:"not null"`
 	LastName  string `json:"lastName" gorm:"not null"`
-	Telephone string `json:"telephone" gorm:"null"`
 	Photo     string `json:"photo" gorm:"null"`
+	Bio       string `json:"bio" gorm:"null"`
 
 	// Social Media
 	Linkedin  string `json:"linkedin" gorm:"null"`
@@ -43,6 +45,16 @@ type Profile struct {
 	Instagram string `json:"instagram" gorm:"null"`
 	Youtube   string `json:"youtube" gorm:"null"`
 	Website   string `json:"website" gorm:"null"`
+
+	// others
+	Specialties string `json:"specialties" gorm:"null"`
+	Skills      string `json:"skills" gorm:"null"`
+	Languages   string `json:"languages" gorm:"null"`
+	Hobbies     string `json:"hobbies" gorm:"null"`
+	Portfolio   bool   `json:"portfolio" gorm:"default=false"`
+
+	// relations
+	Telephone []Telephone `json:"telephone" gorm:"foreignKey:ProfileID"`
 }
 
 func (u *User) BeforeSave(tx *gorm.DB) (err error) {
@@ -50,8 +62,6 @@ func (u *User) BeforeSave(tx *gorm.DB) (err error) {
 		hash := MakePassword(u.Password)
 		tx.Statement.SetColumn("Password", hash)
 	}
-
-	fmt.Println(u.Password)
 	return
 }
 
