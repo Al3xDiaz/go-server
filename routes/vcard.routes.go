@@ -21,7 +21,8 @@ func VCard(w http.ResponseWriter, r *http.Request) {
 		w.Write([]byte("N:" + user.Profile.FirstName + "\r\n"))
 		w.Write([]byte("FN:" + user.Profile.FirstName + " " + user.Profile.LastName + "\r\n"))
 		w.Write([]byte("NICKNAME:" + user.UserName + "\r\n"))
-		w.Write([]byte("TEL;CELL:" + user.Profile.Telephone + "\r\n"))
+		w.Write([]byte("TEL;CELL:+" + user.Profile.Telephone[0].CountryCode +
+			user.Profile.Telephone[0].PhoneNumber + "\r\n"))
 		w.Write([]byte("EMAIL:" + user.Email + "\r\n"))
 		if user.Profile.Photo != "" {
 			w.Write([]byte("PHOTO;VALUE=URI:" + user.Profile.Photo + "\r\n"))

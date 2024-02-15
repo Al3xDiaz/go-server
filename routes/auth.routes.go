@@ -8,6 +8,7 @@ import (
 	"github.com/al3xdiaz/go-server/models"
 	"github.com/al3xdiaz/go-server/services"
 	"github.com/al3xdiaz/go-server/utils"
+	request "github.com/al3xdiaz/go-server/utils"
 )
 
 type ILogin struct {
@@ -32,7 +33,7 @@ func Login(w http.ResponseWriter, r *http.Request) {
 
 	token, err := utils.CreateJWT(map[string]any{
 		"username":   user.UserName,
-		"permisions": models.MakeMapString(user.Permisions),
+		"permisions": user.MakeMapString(),
 	})
 	if err != nil {
 		utils.InternalServerError(w, "error create token")
@@ -56,7 +57,7 @@ func SignUp(w http.ResponseWriter, r *http.Request) {
 	}
 	token, err := utils.CreateJWT(map[string]any{
 		"username":   user.UserName,
-		"permisions": models.MakeMapString(user.Permisions),
+		"permisions": user.MakeMapString(),
 	})
 	if err != nil {
 		utils.InternalServerError(w, "error create token")
@@ -99,6 +100,32 @@ func UpdateProfile(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	utils.Ok(w, user)
+}
+func GetProfile(w http.ResponseWriter, r *http.Request) {
+	_, data := request.ValidateJWT(w, r)
+	username := data["username"]
+	service := services.ProfileService{
+		DB: db.DB,
+	}
+	profile, err := service.GetProfile(username.(string))
+	if err != nil {
+		utils.InternalServerError(w, err.Error())
+		return
+	}
+	utils.Ok(w, profile)
+}
+func PostTelephone(w http.ResponseWriter, r *http.Request) {
+	_, data := request.ValidateJWT(w, r)
+	username := data["username"]
+	service := services.TelephoneService{
+		DB: db.DB,
+	}
+	profile, err := service.CreateTelephone(username.(string), r.Body)
+	if err != nil {
+		utils.InternalServerError(w, err.Error())
+		return
+	}
+	utils.Ok(w, profile)
 }
 func GetUsers(w http.ResponseWriter, r *http.Request) {
 	service := services.UserService{

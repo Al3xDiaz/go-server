@@ -74,9 +74,19 @@
 							"listen": "test",
 							"script": {
 								"exec": [
-									"if (pm.response.code === 200) {",
-									"\tpm.environment.set(\"accessToken\", pm.response.json().token);",
-									"}"
+									"",
+									"pm.test(\"Valid jwt\", () => {",
+									"    if (pm.response.code === 200) {",
+									"        const jwt = pm.response.json().token",
+									"        pm.environment.set(\"accessToken\", jwt);",
+									"        let [jwtHeader, jwtPayload, jwtSignature] = jwt.split('.')",
+									"        let jwtPayloadJsonString = atob(jwtPayload)",
+									"        let jwtPayloadJson = JSON.parse(jwtPayloadJsonString)",
+									"        console.log(jwtPayloadJson)",
+									"        ",
+									"        pm.expect(jwtPayloadJson.data.username).to.eql(pm.environment.get(\"username\"))",
+									"    }",
+									"});"
 								],
 								"type": "text/javascript"
 							}
@@ -102,33 +112,6 @@
 							"path": [
 								"auth",
 								"login"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "profile",
-					"request": {
-						"method": "PATCH",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n    \"firstName\":\"Alex\",\n    \"lastName\":\"Diaz\"\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{url}}/auth/profile",
-							"host": [
-								"{{url}}"
-							],
-							"path": [
-								"auth",
-								"profile"
 							]
 						}
 					},
@@ -274,7 +257,99 @@
 			]
 		},
 		{
-			"name": "user",
+			"name": "profile",
+			"item": [
+				{
+					"name": "profile",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"firsName\":\"Alex\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/auth/profile",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"auth",
+								"profile"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "profile",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"telephone\":\"+504 87654321\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/profile",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"profile"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "telephone",
+			"item": [
+				{
+					"name": "telephone",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"phoneNumber\":\"87654321\",\n    \"whatsapp\":true,\n    \"countryCode\":\"504\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/telephone",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"telephone"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "users",
 			"item": [
 				{
 					"name": "getusers",

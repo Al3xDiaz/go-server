@@ -54,7 +54,7 @@ type Profile struct {
 	Portfolio   bool   `json:"portfolio" gorm:"default=false"`
 
 	// relations
-	Telephone []Telephone `json:"telephone" gorm:"foreignKey:ProfileID"`
+	Telephone []*Telephone `json:"telephone" gorm:"foreignKey:ProfileID"`
 }
 
 func (u *User) BeforeSave(tx *gorm.DB) (err error) {
@@ -75,9 +75,9 @@ type Permision struct {
 	// Users       []*User `gorm:"many2many:user_permision;"`
 }
 
-func MakeMapString(list []*Permision) []string {
+func (u User) MakeMapString() []string {
 	var resp = make([]string, 0)
-	for _, v := range list {
+	for _, v := range u.Permisions {
 		resp = append(resp, v.Path)
 	}
 	return resp

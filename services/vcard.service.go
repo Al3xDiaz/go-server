@@ -18,7 +18,7 @@ func (o VCardService) CreateVCard(username string, next func(user models.User)) 
 	if err != nil {
 		return errors.New("user not found")
 	}
-	if user.Profile.Telephone == "" {
+	if user.Profile.Telephone == nil {
 		return errors.New("the user not has telephone")
 	}
 	next(user)

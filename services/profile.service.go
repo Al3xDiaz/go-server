@@ -36,3 +36,19 @@ func (o ProfileService) UpdateProfile(username string, Body io.ReadCloser) (mode
 
 	return user, nil
 }
+func (o ProfileService) GetProfile(username string) (model models.Profile, err error) {
+	var user models.User
+	err = o.DB.Where("user_name=? and staff", username).First(&user).Error
+	if err != nil {
+		return user.Profile, err
+	}
+	err = o.DB.Model(&user).Association("Profile").Find(&user.Profile)
+	if err != nil {
+		return user.Profile, err
+	}
+	err = o.DB.Model(&user.Profile).Association("Telephone").Find(&user.Profile.Telephone)
+	if err != nil {
+		return user.Profile, err
+	}
+	return user.Profile, err
+}
