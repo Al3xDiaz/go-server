@@ -2,7 +2,6 @@ package routes
 
 import (
 	"encoding/json"
-	"fmt"
 	"log"
 	"net/http"
 	"net/url"
@@ -13,7 +12,7 @@ import (
 	"github.com/gorilla/mux"
 )
 
-func GetCommentary(w http.ResponseWriter, r *http.Request) {
+func DetailCommentary(w http.ResponseWriter, r *http.Request) {
 	// ...
 	var commentary models.Commentary
 
@@ -27,7 +26,7 @@ func GetCommentary(w http.ResponseWriter, r *http.Request) {
 	request.Ok(w, commentary)
 }
 
-func GetCommentaries(w http.ResponseWriter, r *http.Request) {
+func ListCommentaries(w http.ResponseWriter, r *http.Request) {
 	// ...
 	origin, _ := url.Parse(r.Header.Get("origin"))
 	var commentaries []models.Commentary
@@ -66,7 +65,6 @@ func CreateCommentary(w http.ResponseWriter, r *http.Request) {
 	request.Ok(w, commentary)
 }
 func DeleteCommentary(w http.ResponseWriter, r *http.Request) {
-	request.EnableCors(&w)
 	// ...
 	var commentary models.Commentary
 
@@ -81,7 +79,6 @@ func DeleteCommentary(w http.ResponseWriter, r *http.Request) {
 		Where("u.user_name = ?", username).
 		First(&commentary)
 	if response.Error != nil {
-		fmt.Printf(response.Error.Error())
 		request.NotFound(w, "Commentary not found")
 		return
 	}

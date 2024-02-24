@@ -82,7 +82,7 @@
 									"        let [jwtHeader, jwtPayload, jwtSignature] = jwt.split('.')",
 									"        let jwtPayloadJsonString = atob(jwtPayload)",
 									"        let jwtPayloadJson = JSON.parse(jwtPayloadJsonString)",
-									"        console.log(jwtPayloadJson)",
+									"        console.log(jwtPayloadJson.data.permisions)",
 									"        ",
 									"        pm.expect(jwtPayloadJson.data.username).to.eql(pm.environment.get(\"username\"))",
 									"    }",
@@ -123,25 +123,7 @@
 			"name": "commentaries",
 			"item": [
 				{
-					"name": "/commentaries/{id}",
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "{{url}}/commentaries/8",
-							"host": [
-								"{{url}}"
-							],
-							"path": [
-								"commentaries",
-								"8"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "/commentaries",
+					"name": "list",
 					"protocolProfileBehavior": {
 						"disabledSystemHeaders": {}
 					},
@@ -167,7 +149,7 @@
 					"response": []
 				},
 				{
-					"name": "/commentaries",
+					"name": "create",
 					"protocolProfileBehavior": {
 						"disabledSystemHeaders": {}
 					},
@@ -196,7 +178,25 @@
 					"response": []
 				},
 				{
-					"name": "/commentaries/{id}",
+					"name": "detail",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/commentaries/8",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"commentaries",
+								"8"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "delete",
 					"request": {
 						"method": "DELETE",
 						"header": [],
@@ -212,20 +212,116 @@
 						}
 					},
 					"response": []
+				}
+			]
+		},
+		{
+			"name": "Courses",
+			"item": [
+				{
+					"name": "list",
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {}
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Origin",
+								"value": "http://localhost:3000",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{url}}/courses?username={{username}}",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"courses"
+							],
+							"query": [
+								{
+									"key": "username",
+									"value": "{{username}}"
+								}
+							]
+						}
+					},
+					"response": []
 				},
 				{
-					"name": "/commentaries/{id}",
+					"name": "create",
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {}
+					},
 					"request": {
-						"method": "OPTIONS",
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n   \"name\": \"Docker\",\n   \"image\":\"http://example.com/course-docker.jpg\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/courses",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"courses"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "update",
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {}
+					},
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n   \"name\":\"Docker expert\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/courses/1",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"courses",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "delete",
+					"request": {
+						"method": "DELETE",
 						"header": [],
 						"url": {
-							"raw": "{{url}}/commentaries/17",
+							"raw": "{{url}}/commentaries/15",
 							"host": [
 								"{{url}}"
 							],
 							"path": [
 								"commentaries",
-								"17"
+								"15"
 							]
 						}
 					},

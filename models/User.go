@@ -24,6 +24,7 @@ type User struct {
 
 	Permisions []*Permision `gorm:"many2many:UserPermision;association_foreignkey:id;foreignkey:id"`
 	Profile    Profile      `json:"profile"`
+	Courses    []Course     `json:"-"`
 }
 type Profile struct {
 	gorm.Model

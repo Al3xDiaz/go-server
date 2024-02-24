@@ -41,10 +41,15 @@ func newREST() *mux.Router {
 
 	r.HandleFunc("/users", routes.GetUsers).Methods(http.MethodGet)
 
-	r.HandleFunc("/commentaries", routes.GetCommentaries).Methods(http.MethodGet)
-	r.HandleFunc("/commentaries/{id}", utils.RequireAuth(routes.GetCommentary)).Methods(http.MethodGet)
+	r.HandleFunc("/commentaries", routes.ListCommentaries).Methods(http.MethodGet)
+	r.HandleFunc("/commentaries/{id}", utils.RequireAuth(routes.DetailCommentary)).Methods(http.MethodGet)
 	r.HandleFunc("/commentaries/{id}", utils.RequireAuth(routes.DeleteCommentary)).Methods(http.MethodDelete)
 	r.HandleFunc("/commentaries", utils.RequireAuth(routes.CreateCommentary)).Methods(http.MethodPost)
+
+	r.HandleFunc("/courses", routes.ListCourses).Methods(http.MethodGet)
+	r.HandleFunc("/courses", utils.RequireAuth(routes.CreateCourse)).Methods(http.MethodPost)
+	r.HandleFunc("/courses/{id}", utils.RequireAuth(routes.UpdateCourse)).Methods(http.MethodPatch)
+	r.HandleFunc("/courses/{id}", utils.RequireAuth(routes.DeleteCourse)).Methods(http.MethodDelete)
 
 	http.Handle("/", r)
 	return r
