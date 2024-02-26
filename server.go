@@ -25,6 +25,7 @@ func newREST() *mux.Router {
 		models.Permision{},
 		models.Site{},
 		models.Commentary{},
+		models.AchievementsHistory{},
 	)
 
 	r := mux.NewRouter().StrictSlash(true)
@@ -50,6 +51,11 @@ func newREST() *mux.Router {
 	r.HandleFunc("/courses", utils.RequireAuth(routes.CreateCourse)).Methods(http.MethodPost)
 	r.HandleFunc("/courses/{id}", utils.RequireAuth(routes.UpdateCourse)).Methods(http.MethodPatch)
 	r.HandleFunc("/courses/{id}", utils.RequireAuth(routes.DeleteCourse)).Methods(http.MethodDelete)
+
+	r.HandleFunc("/achievements", routes.ListAchievements).Methods(http.MethodGet)
+	r.HandleFunc("/achievements", utils.RequireAuth(routes.CreateAchievement)).Methods(http.MethodPost)
+	r.HandleFunc("/achievements/{id}", utils.RequireAuth(routes.UpdateAchievement)).Methods(http.MethodPatch)
+	r.HandleFunc("/achievements/{id}", utils.RequireAuth(routes.DeleteAchievement)).Methods(http.MethodDelete)
 
 	http.Handle("/", r)
 	return r

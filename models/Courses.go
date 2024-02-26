@@ -8,5 +8,5 @@ type Course struct {
 	ID     uint   `json:"id" gorm:"primaryKey;autoIncrement"`
 	Name   string `json:"name"`
 	Image  string `gorm:"type:varchar(255)" json:"image"`
-	UserID uint   `json:"userID"`
+	UserID uint   `json:"-"`
 }
