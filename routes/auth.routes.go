@@ -99,12 +99,12 @@ func UpdateProfile(w http.ResponseWriter, r *http.Request) {
 func GetProfile(w http.ResponseWriter, r *http.Request) {
 	username := r.URL.Query().Get("username")
 	service := services.ProfileService{}
-	profile, err := service.GetProfile(username)
+	user, err := service.GetProfile(username)
 	if err != nil {
 		utils.InternalServerError(w, err.Error())
 		return
 	}
-	utils.Ok(w, profile)
+	utils.Ok(w, user)
 }
 
 func GetUsers(w http.ResponseWriter, r *http.Request) {
