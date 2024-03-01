@@ -8,6 +8,7 @@ import (
 	"github.com/al3xdiaz/go-server/models"
 	"github.com/al3xdiaz/go-server/services"
 	"github.com/al3xdiaz/go-server/utils"
+	"github.com/gorilla/mux"
 )
 
 type ILogin struct {
@@ -101,12 +102,12 @@ func UpdateProfile(w http.ResponseWriter, r *http.Request) {
 	utils.Ok(w, user)
 }
 func GetProfile(w http.ResponseWriter, r *http.Request) {
-	_, data := utils.ValidateJWT(w, r)
-	username := data["username"]
+	params := mux.Vars(r)
+	username := params["username"]
 	service := services.ProfileService{
 		DB: db.DB,
 	}
-	profile, err := service.GetProfile(username.(string))
+	profile, err := service.GetProfile(username)
 	if err != nil {
 		utils.InternalServerError(w, err.Error())
 		return
