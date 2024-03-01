@@ -39,6 +39,7 @@ func newREST() *mux.Router {
 	r.HandleFunc("/profile", utils.RequireAuth(routes.UpdateProfile)).Methods(http.MethodPatch)
 	r.HandleFunc("/profile", utils.RequireAuth(routes.GetProfile)).Methods(http.MethodGet)
 	r.HandleFunc("/telephone", utils.RequireAuth(routes.PostTelephone)).Methods(http.MethodPost)
+	r.HandleFunc("/telephone/{id}", utils.RequireAuth(routes.DeleteTelephone)).Methods(http.MethodDelete)
 
 	r.HandleFunc("/users", routes.GetUsers).Methods(http.MethodGet)
 

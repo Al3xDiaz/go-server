@@ -8,7 +8,6 @@ import (
 	"github.com/al3xdiaz/go-server/models"
 	"github.com/al3xdiaz/go-server/services"
 	"github.com/al3xdiaz/go-server/utils"
-	"github.com/gorilla/mux"
 )
 
 type ILogin struct {
@@ -72,9 +71,7 @@ func UserData(w http.ResponseWriter, r *http.Request) {
 	_, data := utils.ValidateJWT(w, r)
 	username := data["username"]
 
-	service := services.ProfileService{
-		DB: db.DB,
-	}
+	service := services.ProfileService{}
 	user, err := service.GetData(username.(string))
 	if err != nil {
 		utils.InternalServerError(w, "User Not exist")
@@ -91,9 +88,7 @@ func UpdateProfile(w http.ResponseWriter, r *http.Request) {
 	_, data := utils.ValidateJWT(w, r)
 	username := data["username"]
 
-	service := services.ProfileService{
-		DB: db.DB,
-	}
+	service := services.ProfileService{}
 	user, err := service.UpdateProfile(username.(string), r.Body)
 	if err != nil {
 		utils.InternalServerError(w, err.Error())
@@ -102,11 +97,8 @@ func UpdateProfile(w http.ResponseWriter, r *http.Request) {
 	utils.Ok(w, user)
 }
 func GetProfile(w http.ResponseWriter, r *http.Request) {
-	params := mux.Vars(r)
-	username := params["username"]
-	service := services.ProfileService{
-		DB: db.DB,
-	}
+	username := r.URL.Query().Get("username")
+	service := services.ProfileService{}
 	profile, err := service.GetProfile(username)
 	if err != nil {
 		utils.InternalServerError(w, err.Error())
@@ -114,17 +106,7 @@ func GetProfile(w http.ResponseWriter, r *http.Request) {
 	}
 	utils.Ok(w, profile)
 }
-func PostTelephone(w http.ResponseWriter, r *http.Request) {
-	_, data := utils.ValidateJWT(w, r)
-	username := data["username"]
-	service := services.TelephoneService{}
-	profile, err := service.CreateTelephone(username.(string), r.Body)
-	if err != nil {
-		utils.InternalServerError(w, err.Error())
-		return
-	}
-	utils.Ok(w, profile)
-}
+
 func GetUsers(w http.ResponseWriter, r *http.Request) {
 	service := services.UserService{
 		DB: db.DB,

@@ -289,7 +289,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "[\n    {\n        \"name\": \"Terminal y linea de comandos\",\n        \"image\":\"https://res.cloudinary.com/dd7jrtxu5/image/upload/v1628668757/Courses/Terminal_y_L%C3%ADnea_de_Comandos.png\"\n    },{\n        \"name\":\"Jenkins\",\n        \"image\":\"https://res.cloudinary.com/dd7jrtxu5/image/upload/v1628668392/Courses/Jenkins.png\"\n    }\n]",
+							"raw": "[\n  {\n    \"name\": \"Introduccion a Terminal y Linea de Comandos\",\n    \"image\": \"https://res.cloudinary.com/dd7jrtxu5/image/upload/v1628668757/Courses/Terminal_y_L%C3%ADnea_de_Comandos.png\"\n  },\n  {\n    \"name\": \"Jenkins\",\n    \"image\": \"https://res.cloudinary.com/dd7jrtxu5/image/upload/v1628668392/Courses/Jenkins.png\"\n  },\n  {\n    \"name\": \"Fundamentos de Docker\",\n    \"image\": \"https://res.cloudinary.com/dd7jrtxu5/image/upload/v1628668392/Courses/Docker.png\"\n  },\n  {\n    \"name\": \"Node.js\",\n    \"image\": \"https://res.cloudinary.com/dd7jrtxu5/image/upload/v1628667208/Courses/Node.js.png\"\n  },\n  {\n    \"name\": \"Programacion en Bash\",\n    \"image\": \"https://res.cloudinary.com/dd7jrtxu5/image/upload/v1694755318/shell_wbquow.png\"\n  },\n  {\n    \"name\": \"Infrastructura Como Codigo con Terraform\",\n    \"image\": \"https://res.cloudinary.com/dd7jrtxu5/image/upload/v1694755318/terraform_irgpn3.png\"\n  },\n  {\n    \"name\": \"Programacion Basica\",\n    \"image\": \"https://res.cloudinary.com/dd7jrtxu5/image/upload/v1694755318/programacion_j84u7g.png\"\n  },\n  {\n    \"name\": \"Expresiones Regulares\",\n    \"image\": \"https://res.cloudinary.com/dd7jrtxu5/image/upload/v1694755318/regex_nfn03p.png\"\n  },\n  {\n    \"name\": \"Base de Datos con MongoDB\",\n    \"image\": \"https://res.cloudinary.com/dd7jrtxu5/image/upload/v1694755318/nodejs_ouk9o7.png\"\n  },\n  {\n    \"name\": \"Next Js\",\n    \"image\": \"https://res.cloudinary.com/dd7jrtxu5/image/upload/v1694755318/next_gggvoi.png\"\n  },\n  {\n    \"name\": \"Basic English Course: Fundamentals\",\n    \"image\": \"https://res.cloudinary.com/dd7jrtxu5/image/upload/v1694755317/ingles_pbwijh.png\"\n  },\n  {\n    \"name\": \"Git & GitHub\",\n    \"image\": \"https://res.cloudinary.com/dd7jrtxu5/image/upload/v1694755317/github_jcpqm1.png\"\n  },\n  {\n    \"name\": \"Ecmascript: Historia y Versiones de JavaScript\",\n    \"image\": \"https://res.cloudinary.com/dd7jrtxu5/image/upload/v1694755317/ecmacscrip_y0fibe.png\"\n  },\n  {\n    \"name\": \"DevOps con GitLab\",\n    \"image\": \"https://res.cloudinary.com/dd7jrtxu5/image/upload/v1694755317/gitlab_icanxf.png\"\n  },\n  {\n    \"name\": \"Programacion en Go\",\n    \"image\": \"https://res.cloudinary.com/dd7jrtxu5/image/upload/v1694755317/golang_ugssyl.png\"\n  },\n  {\n    \"name\": \"Docker\",\n    \"image\": \"https://res.cloudinary.com/dd7jrtxu5/image/upload/v1694755317/docker2_wsekwi.png\"\n  },\n  {\n    \"name\": \"Docker\",\n    \"image\": \"https://res.cloudinary.com/dd7jrtxu5/image/upload/v1694755317/docker2_wsekwi.png\"\n  },\n  {\n    \"name\": \"Software_Development_Fundamentals\",\n    \"image\": \"https://res.cloudinary.com/dd7jrtxu5/image/upload/v1628669138/Courses/Software_Development_Fundamentals.jpg\"\n  }\n]\n",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -350,13 +350,13 @@
 						"method": "DELETE",
 						"header": [],
 						"url": {
-							"raw": "{{url}}/commentaries/15",
+							"raw": "{{url}}/courses/3",
 							"host": [
 								"{{url}}"
 							],
 							"path": [
-								"commentaries",
-								"15"
+								"courses",
+								"3"
 							]
 						}
 					},
@@ -546,7 +546,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"firsName\":\"Alex\"\n}",
+							"raw": "{ \n    \"specialties\": \"DevOps,Backend,Frontent,Mobile\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -554,12 +554,11 @@
 							}
 						},
 						"url": {
-							"raw": "{{url}}/auth/profile",
+							"raw": "{{url}}/profile",
 							"host": [
 								"{{url}}"
 							],
 							"path": [
-								"auth",
 								"profile"
 							]
 						}
@@ -584,12 +583,18 @@
 							}
 						},
 						"url": {
-							"raw": "{{url}}/profile",
+							"raw": "{{url}}/profile?username={{username}}",
 							"host": [
 								"{{url}}"
 							],
 							"path": [
 								"profile"
+							],
+							"query": [
+								{
+									"key": "username",
+									"value": "{{username}}"
+								}
 							]
 						}
 					},
@@ -601,13 +606,13 @@
 			"name": "telephone",
 			"item": [
 				{
-					"name": "telephone",
+					"name": "create",
 					"request": {
 						"method": "POST",
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"phoneNumber\":\"87654321\",\n    \"whatsapp\":true,\n    \"countryCode\":\"504\"\n}",
+							"raw": "{\n    \"phoneNumber\":\"{{Telephone}}\",\n    \"countryCode\":\"504\",\n    \"whatsapp\":true\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -621,6 +626,33 @@
 							],
 							"path": [
 								"telephone"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "delete",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"phoneNumber\":\"{{Telephone}}\",\n    \"countryCode\":\"504\",\n    \"whatsapp\":true\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/telephone/4",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"telephone",
+								"4"
 							]
 						}
 					},

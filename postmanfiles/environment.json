@@ -1,5 +1,5 @@
 {
-	"id": "a24971ce-ba40-4afb-8a55-dc5cf13360d9",
+	"id": "71f6d39e-138f-4770-a46e-de94e7815cc1",
 	"name": "local",
 	"values": [
 		{
@@ -26,9 +26,15 @@
 			"key": "username",
 			"value": "admin",
 			"enabled": true
+		},
+		{
+			"key": "Telephone",
+			"value": "87654321",
+			"type": "default",
+			"enabled": true
 		}
 	],
 	"_postman_variable_scope": "environment",
-	"_postman_exported_at": "2023-10-02T17:05:10.607Z",
-	"_postman_exported_using": "Postman/10.18.9"
+	"_postman_exported_at": "2024-03-01T16:12:46.902Z",
+	"_postman_exported_using": "Postman/10.18.11"
 }
