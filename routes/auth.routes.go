@@ -8,7 +8,6 @@ import (
 	"github.com/al3xdiaz/go-server/models"
 	"github.com/al3xdiaz/go-server/services"
 	"github.com/al3xdiaz/go-server/utils"
-	request "github.com/al3xdiaz/go-server/utils"
 )
 
 type ILogin struct {
@@ -102,7 +101,7 @@ func UpdateProfile(w http.ResponseWriter, r *http.Request) {
 	utils.Ok(w, user)
 }
 func GetProfile(w http.ResponseWriter, r *http.Request) {
-	_, data := request.ValidateJWT(w, r)
+	_, data := utils.ValidateJWT(w, r)
 	username := data["username"]
 	service := services.ProfileService{
 		DB: db.DB,
@@ -115,7 +114,7 @@ func GetProfile(w http.ResponseWriter, r *http.Request) {
 	utils.Ok(w, profile)
 }
 func PostTelephone(w http.ResponseWriter, r *http.Request) {
-	_, data := request.ValidateJWT(w, r)
+	_, data := utils.ValidateJWT(w, r)
 	username := data["username"]
 	service := services.TelephoneService{}
 	profile, err := service.CreateTelephone(username.(string), r.Body)
