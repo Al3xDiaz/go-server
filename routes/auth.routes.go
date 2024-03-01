@@ -117,9 +117,7 @@ func GetProfile(w http.ResponseWriter, r *http.Request) {
 func PostTelephone(w http.ResponseWriter, r *http.Request) {
 	_, data := request.ValidateJWT(w, r)
 	username := data["username"]
-	service := services.TelephoneService{
-		DB: db.DB,
-	}
+	service := services.TelephoneService{}
 	profile, err := service.CreateTelephone(username.(string), r.Body)
 	if err != nil {
 		utils.InternalServerError(w, err.Error())

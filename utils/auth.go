@@ -78,6 +78,23 @@ func RequireAuth(next func(w http.ResponseWriter, r *http.Request)) http.Handler
 		})
 	})
 }
+func RequireStaff(next func(w http.ResponseWriter, r *http.Request)) http.HandlerFunc {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		valid, data := ValidateJWT(w, r)
+		if valid {
+			var user models.User
+			db.DB.First(&user, "user_name=? and staff", data["username"])
+			if user.ID == 0 {
+				Forbidden(w, map[string]string{"msg": "not authorized"})
+				return
+			} else {
+				next(w, r)
+			}
+		} else {
+			Unauthorized(w, map[string]string{"msg": "unauthorized"})
+		}
+	})
+}
 func RequirePermision(next func(w http.ResponseWriter, r *http.Request)) http.HandlerFunc {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		valid, data := ValidateJWT(w, r)
