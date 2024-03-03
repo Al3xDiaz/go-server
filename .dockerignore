@@ -1,0 +1,8 @@
+# flyctl launch added from .gitignore
+**/.env
+**/tmp
+
+**/ansible/inventory
+fly.toml
+
+.github/**
