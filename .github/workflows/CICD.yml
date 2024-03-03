@@ -94,7 +94,7 @@ jobs:
         env:
           ANSIBLE_INVENTORY: ansible/inventory
         run: |
-          ansible-playbook ansible/main.yml -e "version=${{ needs.calculate-version.outputs.MajorMinorPatch }}"
+          ansible-playbook ansible/main.yml -e "version=${{ needs.calculate-version.outputs.MajorMinorPatch }}" -e "connection_string=${{secrets.CONNECTION_STRING}}"
 
       # - name: success
       #   if: ${{ success() }}

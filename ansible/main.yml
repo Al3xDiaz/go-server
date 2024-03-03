@@ -23,7 +23,7 @@
             backend:
               image: ghcr.io/al3xdiaz/backend:{{ version | default('latest') }}
               environment:
-                DSN: {{ db_username }}:{{ db_password }}@tcp({{ db_host }})/gorm?charset=utf8mb4&parseTime=True&loc=Local
+                DSN: {{ connection_string }}
                 API_VERSION: {{ version }}
               ports:
                 - "8000:8000"

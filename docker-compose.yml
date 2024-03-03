@@ -7,7 +7,7 @@ services:
     depends_on:
       - db
     environment:
-      DSN: ${DSN-golang:golang@tcp(db:3306)/gorm?charset=utf8mb4&parseTime=True&loc=Local}
+      DSN: ${DSN-postgresql://postgres:the_beast_password@db:5432/gorm}
       API_VERSION: "1.0.0"
     ports:
       - "8000:8000"
@@ -17,19 +17,13 @@ services:
     restart: unless-stopped
   db:
     environment:
-      - MYSQL_ROOT_PASSWORD=123456
-      - MYSQL_DATABASE=gorm
-      - MYSQL_USER=golang
-      - MYSQL_PASSWORD=golang
-    image: mysql
+      POSTGRES_PASSWORD: the_beast_password
+      POSTGRES_DB: gorm
+      PGDATA: /var/lib/postgresql/data/pgdata
+    image: postgres:16.2-alpine3.19
     volumes:
-      - db_data:/var/lib/mysql
+      - db_data:/var/lib/postgresql/data
     ports:
-      - 3306:3306
-  adminer:
-    image: adminer
-    restart: always
-    ports:
-      - 8080:8080
+      - 5432
 volumes:
   db_data:
