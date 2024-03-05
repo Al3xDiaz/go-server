@@ -19,3 +19,15 @@ primary_region = 'mia'
 
 [[vm]]
   size = 'shared-cpu-1x'
+
+[checks]
+  [checks.ping_version]
+    grace_period = "30s"
+    interval = "15s"
+    method = "get"
+    path = "/version"
+    port = 8000
+    timeout = "10s"
+    type = "http"
+    [checks.ping_version.headers]
+      Content-Type = "application/json"
