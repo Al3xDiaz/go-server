@@ -11,13 +11,13 @@ import (
 
 type CourseService struct{}
 
-func (service CourseService) ListCourses(username string) ([]models.Course, error) {
+func (service CourseService) ListCourses(username string, limit int) ([]models.Course, error) {
 	var user models.User
 	err := db.DB.Where("user_name = ?", username).First(&user).Error
 	if err != nil || user.ID == 0 {
 		return user.Courses, errors.New("user not found")
 	}
-	db.DB.Model(&user).Association("Courses").Find(&user.Courses)
+	db.DB.Limit(limit).Model(&user).Association("Courses").Find(&user.Courses)
 	return user.Courses, nil
 }
 func (service CourseService) CreateCourse(username string, body *io.ReadCloser) (models.Course, error) {

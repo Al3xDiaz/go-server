@@ -3,6 +3,7 @@ package routes
 import (
 	"log"
 	"net/http"
+	"strconv"
 
 	"github.com/al3xdiaz/go-server/services"
 	request "github.com/al3xdiaz/go-server/utils"
@@ -12,8 +13,12 @@ import (
 func ListCourses(w http.ResponseWriter, r *http.Request) {
 	// ...
 	username := r.URL.Query().Get("username")
+	limit, err := strconv.Atoi(r.URL.Query().Get("limit"))
+	if err != nil {
+		limit = -1
+	}
 	service := services.CourseService{}
-	response, err := service.ListCourses(username)
+	response, err := service.ListCourses(username, limit)
 	if err != nil {
 		request.InternalServerError(w, "Internal server Error")
 	}
