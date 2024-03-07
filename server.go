@@ -73,11 +73,10 @@ func RunServer() {
 		http.MethodDelete,
 		http.MethodOptions,
 	})
-	// origins := handlers.AllowedOrigins([]string{"https://alex.chaoticteam.com", "http://localhost:3000"})
-	var sites []string
-	db.DB.Model(models.Site{}).Pluck("url", sites)
-	log.Print(sites)
-	origins := handlers.AllowedOrigins(sites)
+	var originsString []string = []string{"*"}
+	db.DB.Model(&models.Site{}).Pluck("url", &originsString)
+	log.Print(originsString)
+	origins := handlers.AllowedOrigins(originsString)
 	headers := handlers.AllowedHeaders([]string{"Authorization", "content-type", "X-Requested-With"})
 	log.Fatal(http.ListenAndServe(":8000", handlers.CORS(credentials, methods, origins, headers)(router)))
 }
