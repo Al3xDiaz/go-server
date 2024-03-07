@@ -32,7 +32,7 @@ func ListCommentaries(w http.ResponseWriter, r *http.Request) {
 	var commentaries []models.Commentary
 	data := db.DB.
 		Joins("INNER JOIN sites s ON s.id = commentaries.site_id").
-		Where("s.url = ?", origin.Hostname()).
+		Where("s.url = ?", origin.String()).
 		Find(&commentaries)
 	if data.Error != nil {
 		log.Fatal(data.Error)
@@ -48,7 +48,7 @@ func CreateCommentary(w http.ResponseWriter, r *http.Request) {
 	username := data["username"]
 	var site models.Site
 	db.DB.FirstOrCreate(&site, models.Site{
-		Url: origin.Hostname(),
+		Url: origin.String(),
 	})
 
 	var commentary models.Commentary
