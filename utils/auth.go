@@ -44,7 +44,6 @@ func ValidateJWT(w http.ResponseWriter, r *http.Request) (map[string]interface{}
 	if err == nil {
 		access_token = cookie.Value
 	}
-
 	token, err := jwt.Parse(access_token, func(t *jwt.Token) (interface{}, error) {
 		_, ok := t.Method.(*jwt.SigningMethodHMAC)
 		if !ok {

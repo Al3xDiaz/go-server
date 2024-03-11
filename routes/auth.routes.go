@@ -78,7 +78,8 @@ func SignUp(w http.ResponseWriter, r *http.Request) {
 		MaxAge:   3600,
 		HttpOnly: true,
 		Secure:   true,
-		SameSite: http.SameSiteLaxMode,
+		// SameSite: http.SameSiteLaxMode,
+		SameSite: http.SameSiteNoneMode,
 	})
 	utils.Ok(w, map[string]interface{}{
 		"user":  user,
