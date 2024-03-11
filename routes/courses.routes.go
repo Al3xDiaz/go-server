@@ -27,7 +27,7 @@ func ListCourses(w http.ResponseWriter, r *http.Request) {
 func CreateCourse(w http.ResponseWriter, r *http.Request) {
 	// ...
 	typeInsert := r.URL.Query().Get("type")
-	_, data := request.ValidateJWT(w, r)
+	data, _ := request.ValidateJWT(w, r)
 	username := data["username"].(string)
 	service := services.CourseService{}
 	if typeInsert == "bulk" {
@@ -50,7 +50,7 @@ func CreateCourse(w http.ResponseWriter, r *http.Request) {
 func UpdateCourse(w http.ResponseWriter, r *http.Request) {
 	params := mux.Vars(r)
 	id := params["id"]
-	_, data := request.ValidateJWT(w, r)
+	data, _ := request.ValidateJWT(w, r)
 	username := data["username"].(string)
 	service := services.CourseService{}
 	response, err := service.UpdateCourse(id, username, &r.Body)
@@ -64,7 +64,7 @@ func DeleteCourse(w http.ResponseWriter, r *http.Request) {
 	// ...
 	params := mux.Vars(r)
 	id := params["id"]
-	_, data := request.ValidateJWT(w, r)
+	data, _ := request.ValidateJWT(w, r)
 	username := data["username"].(string)
 	service := services.CourseService{}
 	_, err := service.DeleteCourse(id, username)

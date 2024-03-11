@@ -44,7 +44,7 @@ func ListCommentaries(w http.ResponseWriter, r *http.Request) {
 func CreateCommentary(w http.ResponseWriter, r *http.Request) {
 	// ...
 	origin, _ := url.Parse(r.Header.Get("origin"))
-	_, data := request.ValidateJWT(w, r)
+	data, _ := request.ValidateJWT(w, r)
 	username := data["username"]
 	var site models.Site
 	db.DB.FirstOrCreate(&site, models.Site{
@@ -71,7 +71,7 @@ func DeleteCommentary(w http.ResponseWriter, r *http.Request) {
 	// Get params
 	params := mux.Vars(r)
 	id := params["id"]
-	_, data := request.ValidateJWT(w, r)
+	data, _ := request.ValidateJWT(w, r)
 	username := data["username"]
 	response := db.DB.
 		Joins("INNER JOIN users u ON u.id = commentaries.user_id").

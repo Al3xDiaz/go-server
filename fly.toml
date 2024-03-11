@@ -19,6 +19,8 @@ primary_region = 'mia'
 
 [[vm]]
   size = 'shared-cpu-1x'
+  memory = "256MB"
+
 
 [checks]
   [checks.ping_version]

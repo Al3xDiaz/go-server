@@ -9,7 +9,7 @@ import (
 )
 
 func PostTelephone(w http.ResponseWriter, r *http.Request) {
-	_, data := utils.ValidateJWT(w, r)
+	data, _ := utils.ValidateJWT(w, r)
 	username := data["username"]
 	service := services.TelephoneService{}
 	profile, err := service.CreateTelephone(username.(string), r.Body)
@@ -20,7 +20,7 @@ func PostTelephone(w http.ResponseWriter, r *http.Request) {
 	utils.Ok(w, profile)
 }
 func DeleteTelephone(w http.ResponseWriter, r *http.Request) {
-	_, data := utils.ValidateJWT(w, r)
+	data, _ := utils.ValidateJWT(w, r)
 	username := data["username"]
 	params := mux.Vars(r)
 	id := params["id"]

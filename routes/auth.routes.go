@@ -38,6 +38,15 @@ func Login(w http.ResponseWriter, r *http.Request) {
 		utils.InternalServerError(w, "error create token")
 		return
 	}
+	http.SetCookie(w, &http.Cookie{
+		Name:     "access_token",
+		Value:    token,
+		Path:     "/",
+		MaxAge:   3600,
+		HttpOnly: true,
+		Secure:   true,
+		SameSite: http.SameSiteLaxMode,
+	})
 	utils.Ok(w, map[string]interface{}{
 		"user":  user,
 		"token": token,
@@ -62,13 +71,22 @@ func SignUp(w http.ResponseWriter, r *http.Request) {
 		utils.InternalServerError(w, "error create token")
 		return
 	}
+	http.SetCookie(w, &http.Cookie{
+		Name:     "access_token",
+		Value:    token,
+		Path:     "/",
+		MaxAge:   3600,
+		HttpOnly: true,
+		Secure:   true,
+		SameSite: http.SameSiteLaxMode,
+	})
 	utils.Ok(w, map[string]interface{}{
 		"user":  user,
 		"token": token,
 	})
 }
 func UserData(w http.ResponseWriter, r *http.Request) {
-	_, data := utils.ValidateJWT(w, r)
+	data, _ := utils.ValidateJWT(w, r)
 	username := data["username"]
 
 	service := services.ProfileService{}
@@ -85,7 +103,7 @@ func UserData(w http.ResponseWriter, r *http.Request) {
 func UpdateProfile(w http.ResponseWriter, r *http.Request) {
 	// var profile models.Profile
 
-	_, data := utils.ValidateJWT(w, r)
+	data, _ := utils.ValidateJWT(w, r)
 	username := data["username"]
 
 	service := services.ProfileService{}

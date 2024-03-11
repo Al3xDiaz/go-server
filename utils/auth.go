@@ -1,6 +1,7 @@
 package utils
 
 import (
+	"errors"
 	"fmt"
 	"net/http"
 	"regexp"
@@ -33,92 +34,90 @@ func CreateJWT(data interface{}) (string, error) {
 	return tokenStr, nil
 }
 
-func ValidateJWT(w http.ResponseWriter, r *http.Request) (bool, map[string]interface{}) {
+func ValidateJWT(w http.ResponseWriter, r *http.Request) (map[string]interface{}, error) {
+	var access_token string
 	if r.Header["Authorization"] != nil {
 		header := r.Header["Authorization"][0]
-		header = strings.Split(header, "Bearer ")[1]
-		if len(header) == 0 {
-			Unauthorized(w, map[string]string{"msg": "token not exist"})
-		}
-		token, err := jwt.Parse(header, func(t *jwt.Token) (interface{}, error) {
-			_, ok := t.Method.(*jwt.SigningMethodHMAC)
-			if !ok {
-				return false, nil
-			}
-			return SECRET, nil
-		})
-
-		if err != nil {
-			return false, nil
-		}
-
-		if token.Valid {
-			claims := token.Claims.(jwt.MapClaims)
-			resp := claims["data"].(map[string]interface{})
-			var user models.User
-			search := db.DB.Find(&user, "user_name = ?", resp["username"])
-			if search.Error != nil || user.ID == 0 {
-				return false, nil
-			}
-			return true, resp
-		}
+		access_token = strings.Split(header, "Bearer ")[1]
 	}
-	return false, nil
+	cookie, err := r.Cookie("access_token")
+	if err == nil {
+		access_token = cookie.Value
+	}
+
+	token, err := jwt.Parse(access_token, func(t *jwt.Token) (interface{}, error) {
+		_, ok := t.Method.(*jwt.SigningMethodHMAC)
+		if !ok {
+			return nil, errors.New("token not valid")
+		}
+		return SECRET, nil
+	})
+	if err != nil {
+		return nil, errors.New("token cant parse")
+	}
+
+	claims := token.Claims.(jwt.MapClaims)
+	resp := claims["data"].(map[string]interface{})
+	var user models.User
+	search := db.DB.Find(&user, "user_name = ?", resp["username"])
+	if search.Error != nil || user.ID == 0 {
+		return nil, errors.New("user not exist")
+	}
+	return resp, nil
 }
 
 func RequireAuth(next func(w http.ResponseWriter, r *http.Request)) http.HandlerFunc {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		valid, _ := ValidateJWT(w, r)
-		if valid {
-			next(w, r)
+		_, err := ValidateJWT(w, r)
+		if err != nil {
+			Unauthorized(w, map[string]interface{}{
+				"msg": err.Error(),
+			})
 			return
 		}
-		Unauthorized(w, map[string]interface{}{
-			"msg": "invalid token",
-		})
+		next(w, r)
 	})
 }
 func RequireStaff(next func(w http.ResponseWriter, r *http.Request)) http.HandlerFunc {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		valid, data := ValidateJWT(w, r)
-		if valid {
-			var user models.User
-			db.DB.First(&user, "user_name=? and staff", data["username"])
-			if user.ID == 0 {
-				Forbidden(w, map[string]string{"msg": "not authorized"})
-				return
-			} else {
-				next(w, r)
-			}
-		} else {
-			Unauthorized(w, map[string]string{"msg": "unauthorized"})
+		data, err := ValidateJWT(w, r)
+		if err != nil {
+			Unauthorized(w, map[string]string{"msg": err.Error()})
+			return
 		}
+		var user models.User
+		db.DB.First(&user, "user_name=? and staff", data["username"])
+		if user.ID == 0 {
+			Forbidden(w, map[string]string{"msg": "not authorized"})
+			return
+		}
+		next(w, r)
 	})
 }
 func RequirePermision(next func(w http.ResponseWriter, r *http.Request)) http.HandlerFunc {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		valid, data := ValidateJWT(w, r)
-		if valid {
-			var user models.User
-			db.DB.First(&user, "user_name = ?", data["username"])
-			db.DB.Model(&user).Association("Permisions")
+		data, err := ValidateJWT(w, r)
+		if err != nil {
+			Unauthorized(w, map[string]string{"msg": err.Error()})
+			return
+		}
+		var user models.User
+		db.DB.First(&user, "user_name = ?", data["username"])
+		db.DB.Model(&user).Association("Permisions")
 
-			for _, v := range user.Permisions {
-				reg, err := regexp.Compile(v.Path)
-				if err != nil {
-					break
-				}
-				if reg.FindString(r.URL.Path) != "" {
-					methodsreg, _ := regexp.Compile(v.Methods)
-					if methodsreg.FindString(r.Method) != "" {
-						next(w, r)
-						return
-					}
+		for _, v := range user.Permisions {
+			reg, err := regexp.Compile(v.Path)
+			if err != nil {
+				break
+			}
+			if reg.FindString(r.URL.Path) != "" {
+				methodsreg, _ := regexp.Compile(v.Methods)
+				if methodsreg.FindString(r.Method) != "" {
+					next(w, r)
+					return
 				}
 			}
-			Forbidden(w, map[string]string{"msg": "not authorized: " + r.URL.Path})
-		} else {
-			Unauthorized(w, map[string]string{"msg": "unauthorized"})
 		}
+		Forbidden(w, map[string]string{"msg": "not authorized: " + r.URL.Path})
 	})
 }

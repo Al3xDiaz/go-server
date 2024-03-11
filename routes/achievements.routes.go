@@ -23,7 +23,7 @@ func ListAchievements(w http.ResponseWriter, r *http.Request) {
 func CreateAchievement(w http.ResponseWriter, r *http.Request) {
 	// ...
 	typeInsert := r.URL.Query().Get("type")
-	_, data := request.ValidateJWT(w, r)
+	data, _ := request.ValidateJWT(w, r)
 	username := data["username"].(string)
 	service := services.AchievementsHistoryService{}
 	if typeInsert == "bulk" {
@@ -46,7 +46,7 @@ func CreateAchievement(w http.ResponseWriter, r *http.Request) {
 func UpdateAchievement(w http.ResponseWriter, r *http.Request) {
 	params := mux.Vars(r)
 	id := params["id"]
-	_, data := request.ValidateJWT(w, r)
+	data, _ := request.ValidateJWT(w, r)
 	username := data["username"].(string)
 	service := services.AchievementsHistoryService{}
 	response, err := service.UpdateAchievement(id, username, &r.Body)
@@ -60,7 +60,7 @@ func DeleteAchievement(w http.ResponseWriter, r *http.Request) {
 	// ...
 	params := mux.Vars(r)
 	id := params["id"]
-	_, data := request.ValidateJWT(w, r)
+	data, _ := request.ValidateJWT(w, r)
 	username := data["username"].(string)
 	service := services.AchievementsHistoryService{}
 	_, err := service.DeleteAchievement(id, username)
