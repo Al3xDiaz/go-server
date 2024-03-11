@@ -3,6 +3,7 @@ package routes
 import (
 	"encoding/json"
 	"net/http"
+	"time"
 
 	"github.com/al3xdiaz/go-server/db"
 	"github.com/al3xdiaz/go-server/models"
@@ -52,6 +53,16 @@ func Login(w http.ResponseWriter, r *http.Request) {
 		"token": token,
 	})
 }
+func LogOut(w http.ResponseWriter, r *http.Request) {
+	http.SetCookie(w, &http.Cookie{
+		Name:     "access_token",
+		Value:    "",
+		Path:     "/",
+		Expires:  time.Unix(0, 0),
+		HttpOnly: true,
+	})
+	utils.NoContend(w)
+}
 
 func SignUp(w http.ResponseWriter, r *http.Request) {
 	var user models.User
@@ -86,6 +97,7 @@ func SignUp(w http.ResponseWriter, r *http.Request) {
 		"token": token,
 	})
 }
+
 func UserData(w http.ResponseWriter, r *http.Request) {
 	data, _ := utils.ValidateJWT(w, r)
 	username := data["username"]

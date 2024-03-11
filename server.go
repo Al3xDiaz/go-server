@@ -34,6 +34,7 @@ func newREST() *mux.Router {
 	r.HandleFunc("/vcard/{username}", routes.VCard).Methods(http.MethodGet)
 
 	r.HandleFunc("/auth/login", routes.Login).Methods(http.MethodPost)
+	r.HandleFunc("/auth/logout", utils.RequireAuth(routes.LogOut)).Methods(http.MethodDelete)
 	r.HandleFunc("/auth/signup", routes.SignUp).Methods(http.MethodPost)
 	r.HandleFunc("/auth/userdata", utils.RequireAuth(routes.UserData)).Methods(http.MethodGet)
 	r.HandleFunc("/profile", utils.RequireAuth(routes.UpdateProfile)).Methods(http.MethodPatch)
