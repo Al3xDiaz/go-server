@@ -73,6 +73,7 @@ func RunServer() {
 		http.MethodPut,
 		http.MethodDelete,
 		http.MethodOptions,
+		http.MethodPatch,
 	})
 	var originsString []string = []string{"*"}
 	db.DB.Model(&models.Site{}).Pluck("url", &originsString)
