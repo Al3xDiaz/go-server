@@ -14,7 +14,7 @@ services:
     volumes:
       - ./:/go-server
       - /go-server/static
-    restart: unless-stopped
+    restart: always
   db:
     environment:
       POSTGRES_PASSWORD: the_beast_password
@@ -25,5 +25,6 @@ services:
       - db_data:/var/lib/postgresql/data
     ports:
       - 5432
+    restart: always
 volumes:
   db_data:

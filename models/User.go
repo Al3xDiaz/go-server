@@ -55,7 +55,7 @@ type Profile struct {
 	Portfolio   bool   `json:"portfolio" gorm:"default=false"`
 
 	// relations
-	Telephone []*Telephone `json:"telephone" gorm:"foreignKey:ProfileID"`
+	Telephone []Telephone `json:"telephone" gorm:"foreignKey:ProfileID"`
 }
 
 func (u *User) BeforeSave(tx *gorm.DB) (err error) {

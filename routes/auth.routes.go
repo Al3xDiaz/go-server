@@ -108,8 +108,6 @@ func UserData(w http.ResponseWriter, r *http.Request) {
 		utils.InternalServerError(w, "User Not exist")
 		return
 	}
-	db.DB.Model(&user).Association("Permisions").Find(&user.Permisions)
-
 	utils.Ok(w, user)
 }
 
