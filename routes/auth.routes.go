@@ -3,6 +3,7 @@ package routes
 import (
 	"encoding/json"
 	"net/http"
+	"strings"
 	"time"
 
 	"github.com/al3xdiaz/go-server/db"
@@ -16,6 +17,21 @@ type ILogin struct {
 	Password string `json:"password"`
 }
 
+func ValidateCredetial(w http.ResponseWriter, r *http.Request) {
+	var token string
+	header := r.Header["Authorization"][0]
+	token = strings.Split(header, "Bearer ")[1]
+	http.SetCookie(w, &http.Cookie{
+		Name:     "access_token",
+		Value:    token,
+		Path:     "/",
+		MaxAge:   3600,
+		HttpOnly: true,
+		Secure:   true,
+		SameSite: http.SameSiteLaxMode,
+	})
+	utils.NoContend(w)
+}
 func Login(w http.ResponseWriter, r *http.Request) {
 	var login ILogin
 	var err error

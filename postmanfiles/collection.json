@@ -81,9 +81,7 @@
 									"        pm.environment.set(\"accessToken\", jwt);",
 									"        let [jwtHeader, jwtPayload, jwtSignature] = jwt.split('.')",
 									"        let jwtPayloadJsonString = atob(jwtPayload)",
-									"        let jwtPayloadJson = JSON.parse(jwtPayloadJsonString)",
-									"        console.log(jwtPayloadJson.data.permisions)",
-									"        ",
+									"        let jwtPayloadJson = JSON.parse(jwtPayloadJsonString)        ",
 									"        pm.expect(jwtPayloadJson.data.username).to.eql(pm.environment.get(\"username\"))",
 									"    }",
 									"});"
@@ -112,6 +110,35 @@
 							"path": [
 								"auth",
 								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Validate Credential",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/auth/validatecredetial",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"auth",
+								"validatecredetial"
 							]
 						}
 					},
@@ -546,7 +573,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{ \n    \"specialties\": \"DevOps,Backend,Frontent,Mobile\"\n}",
+							"raw": "{ \n    \"first_name\": \"Alex\",\n    \"last_name\": \"Diaz\",\n    \"photo\":\"https://res.cloudinary.com/dd7jrtxu5/image/upload/v1644296138/media/images/users/profile/imgs_extra/imagen_cjbso3_itah5l.jpg\",\n    \"bio\":\"I am Alex Diaz, i like play chess and volleyball. I'm 27 years old and i'm leave Honduras. I'm Software Engenieer, Not only, I have experiencie on frontend, backend and database manage, but also I'm site reliability engineer (sre | devops).\",\n    \"twitter\":\"al3xsierra\",\n    \"linkedin\":\"al3xdiaz/\",\n    \"youtube\":\"al3xdiaz\",\n    \"github\":\"https://github.com/al3xdiaz\",\n    \"gitlab\":\"https://gitlab.com/al3xdiaz\",\n    \"discord\":\"https://discordapp.com/users/1028806986457960488\",\n    \"website\":\"https://portfolio.chaoticteam.com/al3xdiaz\",\n    \"telephone\":null,\n    \"specialties\":\"DevOps,Backend,Frontent,Mobile\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -646,13 +673,13 @@
 							}
 						},
 						"url": {
-							"raw": "{{url}}/telephone/4",
+							"raw": "{{url}}/telephone/1",
 							"host": [
 								"{{url}}"
 							],
 							"path": [
 								"telephone",
-								"4"
+								"1"
 							]
 						}
 					},
@@ -684,9 +711,18 @@
 		},
 		{
 			"name": "version",
+			"protocolProfileBehavior": {
+				"disabledSystemHeaders": {}
+			},
 			"request": {
 				"method": "GET",
-				"header": [],
+				"header": [
+					{
+						"key": "Origin",
+						"value": "<calculated when request is sent>",
+						"type": "text"
+					}
+				],
 				"url": {
 					"raw": "{{url}}/version",
 					"host": [
