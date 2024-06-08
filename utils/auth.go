@@ -3,9 +3,9 @@ package utils
 import (
 	"errors"
 	"fmt"
+	"log"
 	"net/http"
 	"regexp"
-	"strings"
 	"time"
 
 	"github.com/al3xdiaz/go-server/db"
@@ -36,9 +36,15 @@ func CreateJWT(data interface{}) (string, error) {
 
 func ValidateJWT(w http.ResponseWriter, r *http.Request) (map[string]interface{}, error) {
 	var access_token string
+	var compRegEx = regexp.MustCompile("^bearer ([^.]+.[^.]+.[^.]+)$")
 	if r.Header["Authorization"] != nil {
 		header := r.Header["Authorization"][0]
-		access_token = strings.Split(header, "Bearer ")[1]
+		match := compRegEx.FindStringSubmatch(header)
+		if len(match) < 1 {
+			return nil, errors.New("token not found")
+		}
+		log.Print(match)
+		access_token = match[0]
 	}
 	cookie, err := r.Cookie("access_token")
 	if err == nil {
