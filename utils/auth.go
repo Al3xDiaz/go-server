@@ -42,10 +42,10 @@ func ValidateJWT(w http.ResponseWriter, r *http.Request) (map[string]interface{}
 		if len(match) < 1 {
 			return nil, errors.New("token not found")
 		}
-		access_token = match[0]
+		access_token = match[1]
 	}
 	cookie, err := r.Cookie("access_token")
-	if err == nil {
+	if err == nil && cookie.Value != "" {
 		access_token = cookie.Value
 	}
 	token, err := jwt.Parse(access_token, func(t *jwt.Token) (interface{}, error) {
