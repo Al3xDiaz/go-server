@@ -1,6 +1,6 @@
 FROM golang:1.22-alpine
 WORKDIR /go-server
-RUN go install github.com/cosmtrek/air@latest
+RUN go install github.com/air-verse/air@latest
 COPY go.mod go.sum ./
 RUN go mod download
 COPY . .
