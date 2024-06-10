@@ -41,6 +41,8 @@ type Profile struct {
 	// Social Media
 	Linkedin  string `json:"linkedin" gorm:"null"`
 	Github    string `json:"github" gorm:"null"`
+	Gitlab    string `json:"gitlab" gorm:"null"`
+	Discord   string `json:"discord" gorm:"null"`
 	Twitter   string `json:"twitter" gorm:"null"`
 	Facebook  string `json:"facebook" gorm:"null"`
 	Instagram string `json:"instagram" gorm:"null"`
