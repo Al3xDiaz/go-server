@@ -1,12 +1,12 @@
 ---
-mode: Mainline
+mode: ContinuousDelivery
 branches:
   main:
     regex: ^master$|^main$
     tag: ""
     increment: Inherit
     mode: ContinuousDeployment
-    prevent-increment-of-merged-branch-version: true
+    prevent-increment-of-merged-branch-version: false
     track-merge-target: false
     source-branches: [develop]
     tracks-release-branches: false
@@ -30,7 +30,7 @@ branches:
     mode: ContinuousDelivery
     tag: useBranchName
     increment: Minor
-    prevent-increment-of-merged-branch-version: false
+    prevent-increment-of-merged-branch-version: true
     track-merge-target: false
     source-branches: []
     tracks-release-branches: false
@@ -42,7 +42,7 @@ branches:
     mode: ContinuousDelivery
     tag: useBranchName
     increment: Minor
-    prevent-increment-of-merged-branch-version: false
+    prevent-increment-of-merged-branch-version: true
     track-merge-target: false
     source-branches: []
     tracks-release-branches: false
@@ -54,7 +54,7 @@ branches:
     mode: ContinuousDelivery
     tag: beta
     increment: Inherit
-    prevent-increment-of-merged-branch-version: false
+    prevent-increment-of-merged-branch-version: true
     track-merge-target: false
     source-branches: []
     tracks-release-branches: false
