@@ -26,6 +26,7 @@ func newREST() *mux.Router {
 		models.Site{},
 		models.Commentary{},
 		models.AchievementsHistory{},
+		models.Project{},
 	)
 
 	r := mux.NewRouter().StrictSlash(true)
@@ -54,6 +55,11 @@ func newREST() *mux.Router {
 	r.HandleFunc("/courses", utils.RequireAuth(routes.CreateCourse)).Methods(http.MethodPost)
 	r.HandleFunc("/courses/{id}", utils.RequireAuth(routes.UpdateCourse)).Methods(http.MethodPatch)
 	r.HandleFunc("/courses/{id}", utils.RequireAuth(routes.DeleteCourse)).Methods(http.MethodDelete)
+
+	r.HandleFunc("/projects", routes.ListProjects).Methods(http.MethodGet)
+	r.HandleFunc("/projects", utils.RequireAuth(routes.CreateProject)).Methods(http.MethodPost)
+	r.HandleFunc("/projects/{id}", utils.RequireAuth(routes.UpdateProject)).Methods(http.MethodPatch)
+	r.HandleFunc("/projects/{id}", utils.RequireAuth(routes.DeleteProject)).Methods(http.MethodDelete)
 
 	r.HandleFunc("/achievements", routes.ListAchievements).Methods(http.MethodGet)
 	r.HandleFunc("/achievements", utils.RequireAuth(routes.CreateAchievement)).Methods(http.MethodPost)
