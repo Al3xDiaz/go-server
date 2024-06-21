@@ -11,10 +11,10 @@ import (
 
 type GaleryService struct{}
 
-func (service GaleryService) ListGaleries(username string, limit int) ([]models.Galery, error) {
+func (service GaleryService) ListGalleries(username string, limit int) ([]models.Galery, error) {
 	var model []models.Galery
 	err := db.DB.
-		Joins("INNER JOIN users u ON u.id = galeries.user_id").
+		Joins("INNER JOIN users u ON u.id = galleries.user_id").
 		Where("u.user_name = ?", username).
 		Find(&model).Error
 	if err != nil {
@@ -35,7 +35,7 @@ func (service GaleryService) CreateGalery(username string, body *io.ReadCloser) 
 func (service GaleryService) UpdateGalery(id string, username string, body *io.ReadCloser) (models.Galery, error) {
 	var model models.Galery
 	err := db.DB.
-		Joins("INNER JOIN users u ON u.id = galeries.user_id").
+		Joins("INNER JOIN users u ON u.id = galleries.user_id").
 		Where("u.user_name = ?", username).
 		Find(&model).Error
 	if err != nil {
@@ -48,7 +48,7 @@ func (service GaleryService) UpdateGalery(id string, username string, body *io.R
 func (service GaleryService) DeleteGalery(id string, username string) (models.Galery, error) {
 	var model models.Galery
 	err := db.DB.
-		Joins("INNER JOIN users u ON u.id = galeries.user_id").
+		Joins("INNER JOIN users u ON u.id = galleries.user_id").
 		Where("u.user_name = ?", username).
 		Find(&model).Error
 	if err != nil {
