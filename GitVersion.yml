@@ -1,5 +1,5 @@
 ---
-mode: ContinuousDelivery
+mode: ContinuousDeployment
 branches:
   main:
     regex: ^master$|^main$
@@ -7,30 +7,18 @@ branches:
     increment: Inherit
     mode: ContinuousDeployment
     prevent-increment-of-merged-branch-version: false
-    track-merge-target: false
-    source-branches: [develop]
+    track-merge-target: true
+    source-branches: [feature, support, patch]
     tracks-release-branches: false
     is-release-branch: false
     is-mainline: true
     pre-release-weight: 55000
-  develop:
-    regex: ^dev(elop)?(ment)?$
-    mode: ContinuousDeployment
-    tag: alpha
-    increment: Inherit
-    prevent-increment-of-merged-branch-version: false
-    track-merge-target: true
-    source-branches: [feature, support, hotfix]
-    tracks-release-branches: true
-    is-release-branch: false
-    is-mainline: false
-    pre-release-weight: 0
   feature:
-    regex: ^feat(ures)?[/-]\w
-    mode: ContinuousDelivery
+    regex: ^feat(ures)?[/\-\w]+$
+    mode: ContinuousDeployment
     tag: useBranchName
     increment: Minor
-    prevent-increment-of-merged-branch-version: true
+    prevent-increment-of-merged-branch-version: false
     track-merge-target: false
     source-branches: []
     tracks-release-branches: false
@@ -38,23 +26,23 @@ branches:
     is-mainline: false
     pre-release-weight: 30000
   refactor:
-    regex: ^refactor?[/-]\w
-    mode: ContinuousDelivery
+    regex: ^refactor?[/\-\w]+$
+    mode: ContinuousDeployment
     tag: useBranchName
     increment: Minor
-    prevent-increment-of-merged-branch-version: true
+    prevent-increment-of-merged-branch-version: false
     track-merge-target: false
     source-branches: []
     tracks-release-branches: false
     is-release-branch: false
     is-mainline: false
     pre-release-weight: 30000
-  hotfix:
-    regex: ^hotfix(es)?[/-]\w
-    mode: ContinuousDelivery
+  patch:
+    regex: ^(patch)|(hotfix)[/\-\w]+$
+    mode: ContinuousDeployment
     tag: beta
     increment: Inherit
-    prevent-increment-of-merged-branch-version: true
+    prevent-increment-of-merged-branch-version: false
     track-merge-target: false
     source-branches: []
     tracks-release-branches: false
@@ -62,11 +50,11 @@ branches:
     is-mainline: false
     pre-release-weight: 30000
   support:
-    regex: ^support[/-]\w
-    mode: ContinuousDelivery
+    regex: ^support[/\-\w]+$
+    mode: ContinuousDeployment
     tag: ""
     increment: Inherit
-    prevent-increment-of-merged-branch-version: true
+    prevent-increment-of-merged-branch-version: false
     track-merge-target: false
     source-branches: []
     tracks-release-branches: false

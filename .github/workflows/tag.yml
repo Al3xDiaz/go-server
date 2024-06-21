@@ -1,0 +1,45 @@
+name: Fly Deploy
+on:
+  merge_group:
+    branches:
+      - main
+jobs:
+  calculate-version:
+      runs-on: ubuntu-latest
+      outputs:
+        MajorMinorPatch: ${{ steps.gitversion.outputs.majorMinorPatch }}
+        FullSemVer: ${{ steps.gitversion.outputs.fullSemVer }}
+      steps:
+        - name: Checkout
+          uses: actions/checkout@v4
+          with:
+            fetch-depth: 0
+        - name: Install GitVersion
+          uses: gittools/actions/gitversion/setup@v0
+          with:
+            versionSpec: 5.x
+        - name: Determine Version
+          id: gitversion # id to later be referenced
+          uses: gittools/actions/gitversion/execute@v0
+        - name: Set Outputs major version
+          id: set-outputs-major
+          run: echo "MajorMinorPatch=${{ steps.gitversion.outputs.majorMinorPatch }}" >> $GITHUB_OUTPUT
+        - name: Set Outputs full version
+          id: set-outputs-full
+          run: echo "FullSemVer=${{ steps.gitversion.outputs.fullSemVer }}" >> $GITHUB_OUTPUT
+  deploy:
+    name: Deploy app
+    runs-on: ubuntu-latest
+    needs: [calculate-version,]
+    concurrency: deploy-group    # optional: ensure only one action runs at a time
+    steps:
+      - name: Create tag
+        uses: actions/github-script@v5
+        with:
+          script: |
+            github.rest.git.createRef({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              ref: 'refs/tags/${{ needs.calculate-version.outputs.MajorMinorPatch }}',
+              sha: context.sha
+            })
