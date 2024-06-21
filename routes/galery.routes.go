@@ -17,7 +17,7 @@ func ListGalleries(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		limit = -1
 	}
-	service := services.GaleryService{}
+	service := services.GalleryService{}
 	response, err := service.ListGalleries(username, limit)
 	if err != nil {
 		request.InternalServerError(w, "Internal server Error")
@@ -25,12 +25,12 @@ func ListGalleries(w http.ResponseWriter, r *http.Request) {
 	}
 	request.Ok(w, response)
 }
-func CreateGalery(w http.ResponseWriter, r *http.Request) {
+func CreateGallery(w http.ResponseWriter, r *http.Request) {
 	// ...
 	data, _ := request.ValidateJWT(w, r)
 	username := data["username"].(string)
-	service := services.GaleryService{}
-	response, err := service.CreateGalery(username, &r.Body)
+	service := services.GalleryService{}
+	response, err := service.CreateGallery(username, &r.Body)
 	if err != nil {
 		log.Print(err.Error())
 		request.InternalServerError(w, "internal server error")
@@ -38,27 +38,27 @@ func CreateGalery(w http.ResponseWriter, r *http.Request) {
 	}
 	request.Ok(w, response)
 }
-func UpdateGalery(w http.ResponseWriter, r *http.Request) {
+func UpdateGallery(w http.ResponseWriter, r *http.Request) {
 	params := mux.Vars(r)
 	id := params["id"]
 	data, _ := request.ValidateJWT(w, r)
 	username := data["username"].(string)
-	service := services.GaleryService{}
-	response, err := service.UpdateGalery(id, username, &r.Body)
+	service := services.GalleryService{}
+	response, err := service.UpdateGallery(id, username, &r.Body)
 	if err != nil {
 		request.NotFound(w, err.Error())
 		return
 	}
 	request.Ok(w, response)
 }
-func DeleteGalery(w http.ResponseWriter, r *http.Request) {
+func DeleteGallery(w http.ResponseWriter, r *http.Request) {
 	// ...
 	params := mux.Vars(r)
 	id := params["id"]
 	data, _ := request.ValidateJWT(w, r)
 	username := data["username"].(string)
-	service := services.GaleryService{}
-	_, err := service.DeleteGalery(id, username)
+	service := services.GalleryService{}
+	_, err := service.DeleteGallery(id, username)
 	if err != nil {
 		request.NotFound(w, err.Error())
 		return

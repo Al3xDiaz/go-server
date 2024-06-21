@@ -4,7 +4,7 @@ import (
 	"gorm.io/gorm"
 )
 
-type Galery struct {
+type Gallery struct {
 	gorm.Model
 
 	ID     uint   `json:"id" gorm:"primaryKey;autoIncrement,not null"`

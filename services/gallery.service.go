@@ -9,10 +9,10 @@ import (
 	"github.com/al3xdiaz/go-server/models"
 )
 
-type GaleryService struct{}
+type GalleryService struct{}
 
-func (service GaleryService) ListGalleries(username string, limit int) ([]models.Galery, error) {
-	var model []models.Galery
+func (service GalleryService) ListGalleries(username string, limit int) ([]models.Gallery, error) {
+	var model []models.Gallery
 	err := db.DB.
 		Joins("INNER JOIN users u ON u.id = galleries.user_id").
 		Where("u.user_name = ?", username).
@@ -22,8 +22,8 @@ func (service GaleryService) ListGalleries(username string, limit int) ([]models
 	}
 	return model, nil
 }
-func (service GaleryService) CreateGalery(username string, body *io.ReadCloser) (models.Galery, error) {
-	var model models.Galery
+func (service GalleryService) CreateGallery(username string, body *io.ReadCloser) (models.Gallery, error) {
+	var model models.Gallery
 	json.NewDecoder(*body).Decode(&model)
 
 	var user models.User
@@ -32,8 +32,8 @@ func (service GaleryService) CreateGalery(username string, body *io.ReadCloser) 
 	db.DB.Create(&model)
 	return model, nil
 }
-func (service GaleryService) UpdateGalery(id string, username string, body *io.ReadCloser) (models.Galery, error) {
-	var model models.Galery
+func (service GalleryService) UpdateGallery(id string, username string, body *io.ReadCloser) (models.Gallery, error) {
+	var model models.Gallery
 	err := db.DB.
 		Joins("INNER JOIN users u ON u.id = galleries.user_id").
 		Where("u.user_name = ?", username).
@@ -45,8 +45,8 @@ func (service GaleryService) UpdateGalery(id string, username string, body *io.R
 	db.DB.Save(&model)
 	return model, nil
 }
-func (service GaleryService) DeleteGalery(id string, username string) (models.Galery, error) {
-	var model models.Galery
+func (service GalleryService) DeleteGallery(id string, username string) (models.Gallery, error) {
+	var model models.Gallery
 	err := db.DB.
 		Joins("INNER JOIN users u ON u.id = galleries.user_id").
 		Where("u.user_name = ?", username).
