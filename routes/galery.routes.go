@@ -10,7 +10,7 @@ import (
 	"github.com/gorilla/mux"
 )
 
-func ListGaleries(w http.ResponseWriter, r *http.Request) {
+func ListGalleries(w http.ResponseWriter, r *http.Request) {
 	// ...
 	username := r.URL.Query().Get("username")
 	limit, err := strconv.Atoi(r.URL.Query().Get("limit"))
@@ -18,7 +18,7 @@ func ListGaleries(w http.ResponseWriter, r *http.Request) {
 		limit = -1
 	}
 	service := services.GaleryService{}
-	response, err := service.ListGaleries(username, limit)
+	response, err := service.ListGalleries(username, limit)
 	if err != nil {
 		request.InternalServerError(w, "Internal server Error")
 		return

@@ -809,7 +809,7 @@
 			]
 		},
 		{
-			"name": "galeries",
+			"name": "galleries",
 			"item": [
 				{
 					"name": "list",
@@ -817,12 +817,12 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{url}}/galeries?username=admin",
+							"raw": "{{url}}/galleries?username=admin",
 							"host": [
 								"{{url}}"
 							],
 							"path": [
-								"galeries"
+								"galleries"
 							],
 							"query": [
 								{
@@ -849,12 +849,12 @@
 							}
 						},
 						"url": {
-							"raw": "{{url}}/galeries",
+							"raw": "{{url}}/galleries",
 							"host": [
 								"{{url}}"
 							],
 							"path": [
-								"galeries"
+								"galleries"
 							]
 						}
 					},
@@ -866,12 +866,12 @@
 						"method": "DELETE",
 						"header": [],
 						"url": {
-							"raw": "{{url}}/galeries/2",
+							"raw": "{{url}}/galleries/2",
 							"host": [
 								"{{url}}"
 							],
 							"path": [
-								"galeries",
+								"galleries",
 								"2"
 							]
 						}
