@@ -33,6 +33,18 @@ func (service ProjectService) CreateProject(username string, body *io.ReadCloser
 	db.DB.Create(&model)
 	return model, nil
 }
+func (service ProjectService) DetailProject(id string, username string) (models.Project, error) {
+	var model models.Project
+	err := db.DB.
+		Order("start_date").
+		Joins("INNER JOIN users u ON u.id = projects.user_id").
+		Where("u.user_name = ?", username).
+		Find(&model).Error
+	if err != nil {
+		return model, errors.New("the user: " + username + " doesn'n have this course")
+	}
+	return model, nil
+}
 func (service ProjectService) UpdateProject(id string, username string, body *io.ReadCloser) (models.Project, error) {
 	var model models.Project
 	err := db.DB.

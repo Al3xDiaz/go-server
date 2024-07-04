@@ -54,11 +54,13 @@ func newREST() *mux.Router {
 
 	r.HandleFunc("/courses", routes.ListCourses).Methods(http.MethodGet)
 	r.HandleFunc("/courses", utils.RequireAuth(routes.CreateCourse)).Methods(http.MethodPost)
+	r.HandleFunc("/courses/{id}", utils.RequireAuth(routes.DetailCourse)).Methods(http.MethodGet)
 	r.HandleFunc("/courses/{id}", utils.RequireAuth(routes.UpdateCourse)).Methods(http.MethodPatch)
 	r.HandleFunc("/courses/{id}", utils.RequireAuth(routes.DeleteCourse)).Methods(http.MethodDelete)
 
 	r.HandleFunc("/projects", routes.ListProjects).Methods(http.MethodGet)
 	r.HandleFunc("/projects", utils.RequireAuth(routes.CreateProject)).Methods(http.MethodPost)
+	r.HandleFunc("/projects/{id}", utils.RequireAuth(routes.DetailProject)).Methods(http.MethodGet)
 	r.HandleFunc("/projects/{id}", utils.RequireAuth(routes.UpdateProject)).Methods(http.MethodPatch)
 	r.HandleFunc("/projects/{id}", utils.RequireAuth(routes.DeleteProject)).Methods(http.MethodDelete)
 

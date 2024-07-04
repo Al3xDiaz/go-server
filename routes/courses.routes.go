@@ -24,6 +24,7 @@ func ListCourses(w http.ResponseWriter, r *http.Request) {
 	}
 	request.Ok(w, response)
 }
+
 func CreateCourse(w http.ResponseWriter, r *http.Request) {
 	// ...
 	typeInsert := r.URL.Query().Get("type")
@@ -47,6 +48,22 @@ func CreateCourse(w http.ResponseWriter, r *http.Request) {
 	}
 	request.Ok(w, response)
 }
+
+func DetailCourse(w http.ResponseWriter, r *http.Request) {
+	// ...
+	params := mux.Vars(r)
+	id := params["id"]
+	data, _ := request.ValidateJWT(w, r)
+	username := data["username"].(string)
+	service := services.CourseService{}
+	course, err := service.DetailCourse(id, username)
+	if err != nil {
+		request.NotFound(w, err.Error())
+		return
+	}
+	request.Ok(w, course)
+}
+
 func UpdateCourse(w http.ResponseWriter, r *http.Request) {
 	params := mux.Vars(r)
 	id := params["id"]

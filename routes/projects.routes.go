@@ -38,6 +38,21 @@ func CreateProject(w http.ResponseWriter, r *http.Request) {
 	}
 	request.Ok(w, response)
 }
+func DetailProject(w http.ResponseWriter, r *http.Request) {
+	// ...
+	params := mux.Vars(r)
+	id := params["id"]
+	data, _ := request.ValidateJWT(w, r)
+	username := data["username"].(string)
+	service := services.ProjectService{}
+	project, err := service.DetailProject(id, username)
+	if err != nil {
+		request.NotFound(w, err.Error())
+		return
+	}
+	request.Ok(w, project)
+}
+
 func UpdateProject(w http.ResponseWriter, r *http.Request) {
 	params := mux.Vars(r)
 	id := params["id"]
