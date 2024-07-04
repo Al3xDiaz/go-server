@@ -45,6 +45,19 @@ func (service CourseService) CreateCourses(username string, body *io.ReadCloser)
 	}
 	return nil
 }
+
+func (service CourseService) DetailCourse(id string, username string) (models.Course, error) {
+	var model models.Course
+	err := db.DB.
+		Joins("INNER JOIN users u ON u.id = courses.user_id").
+		Where("courses.id = ? and u.user_name = ?", id, username).
+		First(&model).Error
+	if err != nil {
+		return model, errors.New("the user: " + username + " doesn'n have this course")
+	}
+	return model, nil
+}
+
 func (service CourseService) UpdateCourse(id string, username string, body *io.ReadCloser) (models.Course, error) {
 	var model models.Course
 	err := db.DB.
