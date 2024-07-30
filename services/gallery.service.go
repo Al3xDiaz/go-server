@@ -49,7 +49,7 @@ func (service GalleryService) DeleteGallery(id string, username string) (models.
 	var model models.Gallery
 	err := db.DB.
 		Joins("INNER JOIN users u ON u.id = galleries.user_id").
-		Where("u.user_name = ?", username).
+		Where("galleries.id = ? AND u.user_name = ?", id, username).
 		Find(&model).Error
 	if err != nil {
 		return model, errors.New("the user: " + username + " doesn'n have this course")
