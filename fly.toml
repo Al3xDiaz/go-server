@@ -1,35 +1,28 @@
-# fly.toml app configuration file generated for chaoticteam on 2024-03-03T03:04:43-06:00
+# fly.toml app configuration file generated for go-server-rssdlg on 2026-02-19T08:17:54Z
 #
 # See https://fly.io/docs/reference/configuration/ for information about how to use this file.
 #
 
-app = 'chaoticteam'
-primary_region = 'mia'
+app = 'go-server-rssdlg'
+primary_region = 'iad'
 
 [build]
-  dockerfile = 'dockerfile.prod'
+  [build.args]
+    GO_VERSION = '1.19'
+
+[env]
+  PORT = '8080'
 
 [http_service]
-  internal_port = 8000
-  auto_stop_machines = true
+  internal_port = 8080
+  force_https = true
+  auto_stop_machines = 'stop'
   auto_start_machines = true
-  min_machines_running = 1
-  max_unavailable = 0
+  min_machines_running = 0
   processes = ['app']
 
 [[vm]]
-  size = 'shared-cpu-1x'
-  memory = "256MB"
-
-
-[checks]
-  [checks.ping_version]
-    grace_period = "30s"
-    interval = "15s"
-    method = "get"
-    path = "/version"
-    port = 8000
-    timeout = "10s"
-    type = "http"
-    [checks.ping_version.headers]
-      Content-Type = "application/json"
+  memory = '1gb'
+  cpu_kind = 'shared'
+  cpus = 1
+  memory_mb = 256
