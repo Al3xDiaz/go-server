@@ -3,6 +3,7 @@ on:
   push:
     branches:
       - main    # change to main if needed
+  workflow_dispatch: 
 jobs:
   calculate-version:
       runs-on: ubuntu-latest
