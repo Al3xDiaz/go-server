@@ -1,20 +1,15 @@
-# fly.toml app configuration file generated for go-server-rssdlg on 2026-02-19T08:17:54Z
+# fly.toml app configuration file generated for go-server-ngyoqa on 2026-02-19T08:32:53Z
 #
 # See https://fly.io/docs/reference/configuration/ for information about how to use this file.
 #
 
-app = 'go-server-rssdlg'
+app = 'go-server-ngyoqa'
 primary_region = 'iad'
 
 [build]
-  [build.args]
-    GO_VERSION = '1.19'
-
-[env]
-  PORT = '8080'
 
 [http_service]
-  internal_port = 8080
+  internal_port = 8000
   force_https = true
   auto_stop_machines = 'stop'
   auto_start_machines = true
